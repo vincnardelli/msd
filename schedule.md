@@ -6,5 +6,4 @@ nav_order: 9
 ---
 
 # 🗓 Orari settimanali
-Questo è lo schema degli orari settimanali del corso.
-Per aggiornamenti visitare la [pagina ufficiale del corso su unicatt.it](https://docenti.unicatt.it/ppd2/it/docenti/80554/vincenzo-nardelli/didattica).
+Per gli orari aggiornati visitare la [pagina ufficiale del corso su unicatt.it](https://docenti.unicatt.it/ppd2/it/docenti/80554/vincenzo-nardelli/didattica).

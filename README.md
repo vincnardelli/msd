@@ -1,41 +1,35 @@
 ---
 layout: home
-title: Coding e Big Data 2024/2025
+title: Metodi Statistici per le Decisioni 2024/2025
 nav_exclude: false
 nav_order: 1
 permalink: index.html
 seo:
-  type: Coding e Big Data 2024/2025
-  name: Economia e Gestione dei Servizi - Università Cattolica del Sacro Cuore
+  type: Metodi Statistici per le Decisioni 2024/2025
+  name: Management dei Servizi - Università Cattolica del Sacro Cuore
 ---
 
-# 💻 Coding e Big Data 2024/2025
+# 📊 Metodi Statistici per le Decisioni 2024/2025
 
-**Coding e Big Data** è un corso facoltativo del corso di laurea triennale in Economia e Gestione dei Servizi dell'Università Cattolica del Sacro Cuore di Roma. Lo scopo del corso è di fornire una conoscenza di base di programmazione e gestione dati ma soprattutto di formare una sensibilità e pensiero critico nei confronti di queste tematiche.
+**Metodi Statistici per le Decisioni** è un corso del corso di laurea magistrale in **Management dei Servizi** presso la Facoltà di **Economia** dell'Università Cattolica del Sacro Cuore, sede di Roma. Il corso è strutturato in due moduli principali, matematico e statistico ed è progettato per fornire competenze essenziali nella rappresentazione e nell'analisi dei problemi economici, statistici e finanziari.
 
+## 📘 A chi si rivolge il corso?
 
-## 👩🏻‍💻 Perchè dovrei seguire il corso?
+Il corso è pensato per studenti del corso di laurea magistrale in Management, con un focus sull’applicazione delle metodologie statistiche a casi reali e concreti. Sono richieste competenze base di statistica, ma non competenze tecniche avanzate, poiché i concetti verranno trattati con un orientamento pratico e applicativo.
 
-È un corso **facoltativo** quindi non sei obbigato od obbligata a seguirlo per completare il tuo percorso di studi. 
+## 🔍 Perché è utile per studenti di Economia?
 
+In un contesto economico sempre più orientato dai dati, conoscere e applicare il Data-Driven Decision Making è cruciale per prendere decisioni informate. Attraverso questo corso, gli studenti di **Management dei Servizi** acquisiranno strumenti per interpretare e utilizzare i dati, abilità fondamentali per affrontare con successo le sfide in ambito finanziario, aziendale e di mercato.
 
-Sostenendo l'esame otterrai dei CFU aggiuntivi che ti potranno essere utili per poterti iscrivere ad un particolare corso di laurea magistrale (informati prima che sia troppo tardi!). Tolto questo piccolo vantaggio, dal punto di vista della tua *carriera accademica*, potrebbe essere il corso più inutile che seguirai. 
+## 🎯 Obiettivi del Corso
+L’obiettivo del corso è duplice: fornire una preparazione teorica solida su metodi e tecniche matematici e statistici e sviluppare competenze pratiche per analizzare e rappresentare scenari concreti in ambito economico e finanziario.
 
+Al termine del corso, gli studenti saranno in grado di applicare i concetti teorici per risolvere problemi complessi, utilizzare il linguaggio e la simbologia matematica e statistica per rappresentare situazioni reali, con particolare attenzione agli ambiti economico, statistico e finanziario, e affrontare con autonomia e competenza studi avanzati.
 
-L'unico motivo per cui potrebbe essere utile seguire questo corso è ottenere conoscenza, suggerimenti e idee utili per **IL TUO FUTURO**. Non importa quale siano le tue ambizioni o progetti per il tuo futuro lavorativo. Viviamo in una società regolata sempre più da algoritmi e dove la conoscenza è generata grazie all'utilizzo massivo di dati. Essere consapevoli di questi strumenti e tecnologie sarà sempre più fondamentale per prendere decisioni nei prossimi anni. 
+## 📋 Programma del Corso
 
-## 👩🏻‍🎓 A chi si rivolge il corso?
-
-A studenti e studentesse del corso triennale di Economia. Non ad ingegneri informatici, statistici o data scientists. Si affronteranno tematiche tecniche ovviamente ma sempre legate ad applicazioni che ti potrannno essere utili come ad esempio analisi economiche, marketing, sanità, startup, finanza, criptovalute, istituzioni. 
-
-
-## 📘 Come è strutturato il corso?
-
-Il programma del corso è un **work in progress**. I tuoi feedback saranno utilissimi per poter strutturare, settimana dopo settimana, il corso in base alle curiosità e interessi che raccolgo durante le lezioni. 
-
-## 📌 Avvisi
-
-{% assign announcements = site.announcements | reverse %}
-{% for announcement in announcements %}
-{{ announcement }}
-{% endfor %}
+- **Software R**: Introduzione all’utilizzo del software R per l’analisi statistica.
+- **Regressione**: Richiami di regressione lineare semplice e multipla, modelli logit per variabili dipendenti binarie.
+- **Alberi decisionali**: Approccio agli alberi di decisione per regressione e classificazione.
+- **Machine Learning**: Applicazione di Random Forest con divisione train-test e valutazione degli errori.
+- **Clustering**: Clustering gerarchico e k-means.
