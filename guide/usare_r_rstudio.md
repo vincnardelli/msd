@@ -1,11 +1,10 @@
 ---
 layout: page
-title: Usare R e Rstudio
+title: Usare R e RStudio
 permalink: /guide/usare_r_rstudio
 parent: Guide
 nav_order: 2
 ---
-
 
 # Usare R e RStudio
 {:.no_toc}
@@ -16,48 +15,38 @@ nav_order: 2
 1. TOC
 {:toc}
 
-## Usare R
-R non è un programma che puoi aprire e iniziare a utilizzare, come Microsoft Word o Internet Explorer. Invece, R è un linguaggio informatico, come C, C++ o UNIX. Usi R scrivendo comandi nel linguaggio R e chiedendo al tuo computer di interpretarli. In passato, le persone eseguivano il codice R nella finestra di un terminale UNIX, come se fossero hacker in un film degli anni '80. Ora quasi tutti usano R con un'applicazione chiamata RStudio e ti consiglio di farlo anche tu.
+## Perché utilizzare RStudio invece di R?
 
-### R e UNIX
+R è il linguaggio di programmazione che esegue i calcoli e le operazioni statistiche, ma RStudio offre un’interfaccia avanzata che rende il lavoro con R molto più intuitivo ed efficiente. **Ecco alcuni dei principali vantaggi di utilizzare RStudio:**
 
-Puoi comunque eseguire R in una finestra UNIX o BASH (prompt o Powershell) digitando il comando: R che apre un interprete R. Puoi quindi fare il tuo lavoro e chiudere l'interprete eseguendo q()quando hai finito.
+- **Interfaccia Organizzata**: RStudio suddivide l’ambiente di lavoro in più pannelli per visualizzare script, console, file, e grafici, rendendo più semplice la gestione del codice e delle risorse.
+- **Gestione dei Progetti**: RStudio permette di creare progetti, facilitando l'organizzazione dei file e delle risorse per uno specifico lavoro, corso o progetto.
+- **Visualizzazione dei Grafici e dei Risultati**: I risultati delle analisi, incluse tabelle e grafici, vengono visualizzati direttamente nell’interfaccia, rendendo più semplice la loro consultazione e interpretazione.
 
-## Utilizzo di RStudio
-R di per sé è solo il 'cuore' della programmazione R, ma non ha un'interfaccia utente particolare. Se preferisci (come me) un'interfaccia più gradevole con funzionalità aggiuntive, ti suggerisco di utilizzare RStudio. RStudio è un ambiente di sviluppo integrato (IDE) e sarà il nostro strumento principale per interagire con R. Per installare RStudio, attenersi alla seguente procedura:
+In sintesi, RStudio è progettato per semplificare il lavoro con R, rendendo l’esperienza molto più user-friendly.
 
-Vai su www.rstudio.com
-Vai a Products > RStudio.
-In questa pagina, scorri verso il basso e seleziona RStudio Desktop.
-Scegli la versione di RStudio
-Selezionare l' Open Source Edition facendo clic su Download RStudio Desktop.
+## Creare un Progetto per il Corso
 
-Come ultimo passaggio, scorri verso il basso dove ti mostra un pulsante di download per il tuo sistema operativo. Il sito Web lo rileverà automaticamente. Ricevi anche un bel promemoria per installare prima R, nel caso non l'abbia ancora fatto.
+Per lavorare in modo ordinato, è consigliabile creare un **progetto specifico per il corso** e usare sempre lo stesso per mantenere organizzati i file e i dati.
 
-Apri il file scaricato e segui le istruzioni di installazione. Ancora una volta, mantieni le impostazioni predefinite il più possibile.
-Congratulazioni, sei pronto per imparare R. D'ora in poi devi solo avviare RStudio e non R. Naturalmente, se sei un tipo curioso, nulla ti impedirà di provare R senza RStudio.
+### Istruzioni per creare un progetto in RStudio
 
-### Personalizzazione di RStudio (un consiglio)
-Prima di iniziare a programmare, devi voler apportare subito alcune modifiche alle tue impostazioni per avere un'esperienza migliore (secondo la mia opinione). Per aprire le impostazioni di Rstudio devi cliccare su
+1. Apri RStudio e vai al menu **File > New Project**.
+2. Seleziona **New Directory** per creare una nuova cartella per il progetto.
+3. Scegli **New Project** e inserisci un nome per la cartella, ad esempio “Corso_R”.
+4. Scegli una posizione sul tuo computer in cui vuoi salvare il progetto.
+5. Clicca su **Create Project**. 
 
-RStudio > Preferenceso premere ⌘ + ,se sei su un Mac.
+RStudio ora aprirà il progetto, che funge da contenitore per tutti i file, script e dati relativi al corso. Utilizzando sempre questo progetto, puoi assicurarti che tutti i file siano ben organizzati e facilmente accessibili.
 
-RStudio > Tools > Global Options oppure premere Ctrl + ,se si lavora su un computer Windows.
+### Organizzare i File nel Progetto
 
-Ti consiglio di apportare almeno le seguenti modifiche per prepararti al successo fin dall'inizio:
+È importante mantenere una struttura ordinata all'interno della cartella del progetto. Inserisci tutti i tuoi file R e i dati nello stesso progetto per facilitare l’accesso e il caricamento. In questo modo, eviterai problemi legati ai percorsi dei file e renderai il tuo lavoro più gestibile. Utilizzando questa organizzazione, il tuo progetto sarà ben strutturato e ogni file sarà facilmente accessibile e gestibile.
 
-Già nella prima scheda, ovvero  General > Basic, dovremmo apportare una delle modifiche più significative. Disattiva tutte le opzioni che iniziano con Restore. Ciò garantirà che ogni volta che avvii RStudio, inizi con una tabula rasa. A prima vista potrebbe sembrare controintuitivo non ricominciare tutto da dove eri rimasto, ma è fondamentale rendere tutti i tuoi progetti facilmente riproducibili. Inoltre, se si lavora insieme ad altri, non ripristinare le impostazioni personali garantisce anche che la programmazione funzioni su computer diversi. Pertanto, ti consiglio di deselezionare quanto segue:
+## Differenza tra Dati e File R
 
-Restore most recently opened project at startup,
+Nel contesto di R e RStudio, è utile comprendere la differenza tra **file R** e **dati**.
 
-Restore previsouly open source documents at startup,
-
-Restore .Rdata into workspace at startup
-
-
-Nella stessa scheda in Workspace, selezionare Never per l'impostazione Save workspace to .RData on exit. Si potrebbe pensare che sia saggio mantenere i risultati intermedi archiviati da una sessione R all'altra. Tuttavia, mi sono spesso ritrovato a risolvere problemi dovuti a questa impostazione. Con l'esperienza, scoprirai che questo evita molti mal di testa.
-
-Naturalmente, se desideri personalizzare ulteriormente il tuo spazio di lavoro, puoi farlo. Il modo visivamente più efficace per modificare l'aspetto predefinito di RStudio è selezionare Appearance e scegliere un tema colore completamente diverso. Sentiti libero di navigare tra le varie opzioni e vedere cosa preferisci. Non c'è giusto o sbagliato qui. Fallo tuo.
-
-## Aggiornare R e RStudio
-Sebbene non sia strettamente qualcosa che ti aiuta a diventare un programmatore migliore, questo consiglio potrebbe tornare utile per evitare di trasformarti in un programmatore frustrato. Quando si aggiorna il software, è necessario aggiornare R e RStudio separatamente l'uno dall'altro. Sebbene sia R che RStudio lavorino a stretto contatto tra loro, costituiscono comunque parti separate di software. Pertanto, è essenziale tenere presente che l'aggiornamento di RStudio non aggiornerà automaticamente R.
+- **File R**: Un file con estensione `.R` contiene script di codice R, ovvero le istruzioni e i comandi che eseguono operazioni sui dati. Qui puoi scrivere tutte le linee di codice che ti permettono di manipolare, analizzare e visualizzare i dati.
+  
+- **Dati**: I dati sono generalmente contenuti in file come `.csv`, `.xlsx` o `.txt`, che contengono le informazioni da analizzare. In RStudio, questi file vengono caricati nel progetto e trattati attraverso le istruzioni di codice contenute nei file `.R`.
