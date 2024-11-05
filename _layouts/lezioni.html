@@ -1,10 +1,5 @@
 <div class="announcement">
   <h2>{{page.number}} - {{ page.title }}</h2>
-  <span class="announcement-meta">
-    {% if page.date %}
-    Lezione del {{ page.date | date: '%d/%m/%Y' }} - Settimana {{page.week}}
-    {% endif %}
-  </span>
   <div>
     <br>
     {% if page.slides_pdf %}
