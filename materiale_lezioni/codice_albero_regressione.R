@@ -1,6 +1,7 @@
 # Caricare i pacchetti necessari
 library(tree)
 library(Ecdat)
+library(randomForest)
 # Caricare il dataset Cigarette
 data("Cigarette")
 
@@ -26,9 +27,14 @@ summary(reg_tree)
 plot(reg_tree)
 text(reg_tree)
 
+
+
+
+
+
+
 # Specificare la formula: 'packs' (consumo di sigarette) come variabile target
 formula <- packpc ~ taxs+income+pop
-
 
 # Costruire l'albero di regressione
 reg_tree <- tree(formula, data = Cigarette)
@@ -46,16 +52,18 @@ cv_tree <- cv.tree(reg_tree)
 plot(cv_tree$size, cv_tree$dev)
 
 # Potatura dell'albero per ottimizzare la complessità
-pruned_tree <- prune.tree(reg_tree, best =6)
+pruned_tree <- prune.tree(reg_tree, best =2)
 
 # Visualizzare l'albero potato
 plot(pruned_tree)
-text(pruned_tree, pretty = 0)
+text(pruned_tree)
 
 # Modello lineare
 lm_model <- lm(formula, data = Cigarette)
 lm_preds <- predict(lm_model)
 summary(lm_model)
+
+tree_preds <- predict(reg_tree)
 
 # Calcolare l'MSE per entrambi i modelli
 tree_mse <- mean((Cigarette$packpc - tree_preds)^2)
