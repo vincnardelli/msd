@@ -58,4 +58,31 @@ odds / (1 + odds)
 
 # Predizioni di probabilità direttamente dal modello
 predicted_prob <- predict(glm_balance, newdata = new_data, type = "response")
-predicted_prob
+round(predicted_prob, 4)
+
+# Soglia di classificazione predefinita (0.5)
+threshold <- 0.5
+
+# Probabilità previste per tutte le osservazioni
+predicted_prob_all <- predict(glm_balance, type = "response")
+
+# Conversione in classi binarie
+predicted_class <- factor(ifelse(predicted_prob_all > threshold, "Yes", "No"))
+
+# Matrice di confusione per valutare le prestazioni del modello
+confusionMatrix(Default$default, predicted_class, positive = "Yes")
+
+# Soglia 0.5: Matrice di confusione
+threshold_1 <- 0.5
+predicted_class_1 <- factor(ifelse(predicted_prob_all > threshold_1, "Yes", "No"))
+confusionMatrix(predicted_class_1, Default$default, positive = "Yes")
+
+# Soglia 0.2: Maggiore sensibilità
+threshold_2 <- 0.2
+predicted_class_2 <- factor(ifelse(predicted_prob_all > threshold_2, "Yes", "No"))
+confusionMatrix(predicted_class_2, Default$default, positive = "Yes")
+
+# Soglia 0.8: Maggiore specificità
+threshold_3 <- 0.8
+predicted_class_3 <- factor(ifelse(predicted_prob_all > threshold_3, "Yes", "No"))
+confusionMatrix(predicted_class_3, Default$default, positive = "Yes")
