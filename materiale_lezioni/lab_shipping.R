@@ -15,7 +15,7 @@ summary(shipping)
 
 # Creazione di un modello di regressione logistica per prevedere 'reached_time' 
 # (variabile dipendente) basandosi su 'cost_of_the_product' (variabile indipendente)
-model = glm(reached_time ~ cost_of_the_product, data=shipping)
+model = glm(reached_time ~ cost_of_the_product, data=shipping, family = binomial)
 
 # Riepilogo del modello: output dettagliato dei parametri stimati, significatività e fitting
 summary(model)
@@ -37,7 +37,7 @@ predict(model, newdata = new_data, type = "response")
 
 # Creazione di un nuovo modello di regressione logistica, escludendo alcune variabili
 # La formula usa '-mode_of_shipment-gender-customer_rating' per rimuovere queste variabili
-model = glm(reached_time ~ .-mode_of_shipment-gender-customer_rating, data=shipping)
+model = glm(reached_time ~ .-mode_of_shipment-gender-customer_rating, data=shipping, family = binomial)
 
 # Riepilogo del nuovo modello: parametri, significatività e fitting
 summary(model)

@@ -7,7 +7,7 @@ data <- read.csv("coupon.csv")
 
 # Costruzione del modello di regressione logistica
 # La variabile dipendente è Y, mentre le variabili indipendenti sono weather, coupon, destination, passenger, e direction_same
-model <- glm(Y ~ weather + coupon + destination + passenger + direction_same, data = data)
+model <- glm(Y ~ weather + coupon + destination + passenger + direction_same, data = data, family = binomial)
 
 # Mostra il riepilogo del modello
 summary(model)
