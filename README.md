@@ -1,15 +1,15 @@
 ---
 layout: home
-title: Metodi Statistici per le Decisioni 2024/2025
+title: Metodi Statistici per le Decisioni 2025/2026
 nav_exclude: false
 nav_order: 1
 permalink: index.html
 seo:
-  type: Metodi Statistici per le Decisioni 2024/2025
+  type: Metodi Statistici per le Decisioni 2025/2026
   name: Management dei Servizi - Università Cattolica del Sacro Cuore
 ---
 
-# 📊 Metodi Statistici per le Decisioni 2024/2025
+# 📊 Metodi Statistici per le Decisioni 2025/2026
 
 **Metodi Statistici per le Decisioni** è un corso del corso di laurea magistrale in **Management dei Servizi** presso la Facoltà di **Economia** dell'Università Cattolica del Sacro Cuore, sede di Roma. Il corso è strutturato in due moduli principali, matematico e statistico ed è progettato per fornire competenze essenziali nella rappresentazione e nell'analisi dei problemi economici, statistici e finanziari.
 
