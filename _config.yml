@@ -13,9 +13,9 @@
 # you will see them accessed via {{ site.title }}, {{ site.github_repo }}, and so on.
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
-title: Metodi statistici per le decisioni
-tagline: Corso Università Cattolica del Sacro Cuore
-description: Corso Università Cattolica del Sacro Cuore
+title: Metodi Matematici e Statistici per le Decisioni Economiche
+tagline: Corso di Laurea Magistrale in Management, Imprese e Mercati - Università Cattolica del Sacro Cuore
+description: Corso di Laurea Magistrale in Management, Imprese e Mercati - Università Cattolica del Sacro Cuore
 author: Vincenzo Nardelli
 baseurl: '/msd' # the subpath of your site, e.g. /blog
 url: 'https://vincnardelli.github.io' # the base hostname & protocol for your site, e.g. http://example.com
