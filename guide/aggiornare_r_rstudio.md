@@ -41,11 +41,22 @@ Aggiornare R e RStudio all’ultima versione disponibile garantisce che tu possa
 ### Linux (Ubuntu/Debian)
 
 1. Apri il terminale.
-2. Aggiungi il repository CRAN per assicurarti di ottenere l’ultima versione:
+2. Aggiungi il repository CRAN per assicurarti di ottenere l'ultima versione:
 
    ```bash
+   # Aggiorna i pacchetti esistenti
+   sudo apt update
+   
+   # Installa le dipendenze necessarie
+   sudo apt install -y software-properties-common dirmngr
+   
+   # Aggiungi la chiave GPG
+   wget -qO- https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc | sudo tee -a /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc
+   
+   # Aggiungi il repository CRAN
    sudo add-apt-repository "deb https://cloud.r-project.org/bin/linux/ubuntu $(lsb_release -cs)-cran40/"
-   sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E084DAB9
+   
+   # Aggiorna la lista dei pacchetti
    sudo apt update
    ```
 

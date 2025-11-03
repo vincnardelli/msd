@@ -6,26 +6,33 @@ parent: Guide
 nav_order: 3
 ---
 
-## 3. Installazione dei Pacchetti in RStudio
+# Installazione dei Pacchetti in RStudio
+{:.no_toc}
 
-### Cosa sono i Pacchetti
+## Table of contents
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
+
+## Cosa sono i Pacchetti
 
 I pacchetti sono raccolte di funzioni, dati e documentazione. Ogni pacchetto deve essere **installato una volta** e **caricato ad ogni nuova sessione**.
 
-### Installare un Pacchetto
+## Installare un Pacchetto
 
-#### Metodo 1: Interfaccia Grafica
+### Metodo 1: Interfaccia Grafica
 
 1. Vai su **Packages** nel pannello in basso a destra.
 2. Clicca su **Install**, scrivi il nome del pacchetto (es. `ggplot2`) e conferma.
 
-#### Metodo 2: Tramite Codice
+### Metodo 2: Tramite Codice
 
 ```r
 install.packages("ggplot2")
 ```
 
-### Caricare un Pacchetto
+## Caricare un Pacchetto
 
 Per utilizzare il pacchetto `ggplot2`, caricalo con:
 
@@ -33,7 +40,7 @@ Per utilizzare il pacchetto `ggplot2`, caricalo con:
 library(ggplot2)
 ```
 
-### Esempio Completo
+## Esempio Completo
 
 ```r
 # Installazione (una volta)

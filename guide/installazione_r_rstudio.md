@@ -26,7 +26,7 @@ Prima di iniziare, è utile comprendere la differenza tra **R** e **RStudio**.
 
 Per utilizzare RStudio, è necessario installare prima R. Segui questi passaggi:
 
-1. Vai alla pagina di download di **CRAN**, il sito ufficiale di R, per scaricare la versione più aggiornata di R: [CRAN R Download](https://posit.co/download/rstudio-desktop/).
+1. Vai alla pagina di download di **CRAN**, il sito ufficiale di R, per scaricare la versione più aggiornata di R: [CRAN R Download](https://cran.r-project.org/).
 2. Nella sezione **Download and Install R**, seleziona il collegamento per il tuo sistema operativo:
    - **Download R for Windows**
    - **Download R for macOS**
