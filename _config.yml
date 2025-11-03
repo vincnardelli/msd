@@ -13,7 +13,7 @@
 # you will see them accessed via {{ site.title }}, {{ site.github_repo }}, and so on.
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
-title: Metodi Matematici e Statistici per le Decisioni Economiche
+title: Met. Matematici e Statistici
 tagline: Corso di Laurea Magistrale in Management, Imprese e Mercati - Università Cattolica del Sacro Cuore
 description: Corso di Laurea Magistrale in Management, Imprese e Mercati - Università Cattolica del Sacro Cuore
 author: Vincenzo Nardelli
