@@ -32,4 +32,3 @@ Al termine del corso, gli studenti saranno in grado di applicare i concetti teor
 - **Regressione**: Richiami di regressione lineare semplice e multipla, modelli logit per variabili dipendenti binarie.
 - **Alberi decisionali**: Approccio agli alberi di decisione per regressione e classificazione.
 - **Machine Learning**: Applicazione di Random Forest con divisione train-test e valutazione degli errori.
-- **Clustering**: Clustering gerarchico e k-means.
