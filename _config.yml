@@ -19,7 +19,7 @@ description: Corso di Laurea Magistrale in Management, Imprese e Mercati - Unive
 author: Vincenzo Nardelli
 baseurl: '/msd' # the subpath of your site, e.g. /blog
 url: 'https://vincnardelli.github.io' # the base hostname & protocol for your site, e.g. http://example.com
-exclude: ["Gemfile", "Gemfile.lock", "LICENSE"]
+exclude: ["Gemfile", "Gemfile.lock", "LICENSE", "vendor", "node_modules"]
 
 # Theme settings
 remote_theme: just-the-docs/just-the-docs@v0.4.0.rc2
@@ -35,10 +35,10 @@ footer_content:
 # Collections for website data
 collections:
   staffers:
-  modules:
-  schedules:
   announcements:
-  lezioni:
+  capitoli:
+    output: true
+    permalink: /capitolo/:name/
 # Default layouts for each collection type
 defaults:
   - scope:
@@ -49,24 +49,14 @@ defaults:
       subpath: '/assets/images/'
   - scope:
       path: ''
-      type: modules
-    values:
-      layout: module
-  - scope:
-      path: ''
-      type: schedules
-    values:
-      layout: schedule
-  - scope:
-      path: ''
       type: announcements
     values:
       layout: announcement
   - scope:
       path: ''
-      type: lezioni
+      type: capitoli
     values:
-      layout: lezioni
+      layout: capitolo
 
 compress_html:
   clippings: all

@@ -1,0 +1,124 @@
+---
+layout: default
+---
+{% assign capitoli = site.capitoli | sort: 'number' %}
+{% assign sezione_names = "Dati e decisioni|Modelli di regressione|Alberi e random forest|Verso l'esame" | split: "|" %}
+{% assign pidx = page.sezione | minus: 1 %}
+{% assign repo = "https://github.com/vincnardelli/msd/blob/main" %}
+{% assign colab = "https://colab.research.google.com/github/vincnardelli/msd/blob/main" %}
+
+<div class="modulo modulo--p{{ page.sezione }}">
+  <div class="modulo__head">
+    <div class="modulo__kicker">
+      <span class="tag tag--sezione tag--p{{ page.sezione }}">{{ sezione_names[pidx] }}</span>
+      <span class="tag tag--lang">Python</span>
+    </div>
+    <h1 class="modulo__title"><span class="modulo__num">{{ page.number }}</span> {{ page.title }}</h1>
+    <p class="modulo__idea">{{ page.idea }}</p>
+
+    {% assign slide_path = "/" | append: page.slides_pdf %}
+    {% assign slide = site.static_files | where: 'path', slide_path | first %}
+    {% if slide %}
+    <div class="slide-dl">
+      <a class="slide-dl__box" href="{{ site.baseurl }}/{{ page.slides_pdf }}" download>
+        <span class="slide-dl__icon" aria-hidden="true">PDF</span>
+        <span class="slide-dl__txt"><span class="slide-dl__t">Slide</span><span class="slide-dl__d">{{ page.slides_descr | default: page.title }}</span></span>
+        <span class="slide-dl__btn">Scarica ↓</span>
+      </a>
+    </div>
+    {% else %}
+    <p class="muted">Le slide arrivano con la lezione.</p>
+    {% endif %}
+  </div>
+
+  <div class="concetti">
+    <div class="concetti__col">
+      <div class="concetti__label">Cosa devi già sapere</div>
+      {% if page.concepts_required.size > 0 %}
+      <ul class="concetti__list">
+        {% for c in page.concepts_required %}
+          {% assign found = false %}
+          {% for w in capitoli %}
+            {% if w.concepts_new contains c and found == false %}
+              <li><a href="{{ site.baseurl }}{{ w.url }}" title="Capitolo {{ w.number }} · {{ w.title }}">{{ c }} <span class="concetti__ref">cap. {{ w.number }}</span></a></li>
+              {% assign found = true %}
+            {% endif %}
+          {% endfor %}
+          {% unless found %}<li>{{ c }}</li>{% endunless %}
+        {% endfor %}
+      </ul>
+      {% else %}<p class="concetti__none">Le basi di statistica della triennale.</p>{% endif %}
+    </div>
+    <div class="concetti__col">
+      <div class="concetti__label">Cosa impari in questo capitolo</div>
+      <ul class="concetti__list concetti__list--new">
+        {% for c in page.concepts_new %}<li>{{ c }}</li>{% endfor %}
+      </ul>
+    </div>
+  </div>
+
+  {% if page.notebook.size > 0 %}
+  <section id="notebook">
+    <h2>Notebook</h2>
+    <p class="muted">Si aprono in Google Colab con un clic, oppure si scaricano e si aprono in Jupyter (vedi le <a href="{{ site.baseurl }}/guide/">guide</a>). Le soluzioni compaiono qui dopo la lezione.</p>
+    {% assign gruppi = "lezione|lab" | split: "|" %}
+    {% for gruppo in gruppi %}
+      {% assign nbs = page.notebook | where: 'tipo', gruppo %}
+      {% if nbs.size > 0 %}
+      <div class="notebook-gruppo">{% if gruppo == "lezione" %}Il codice della lezione{% else %}Esercitazioni{% endif %}</div>
+      <div class="slide-dl slide-dl--codice slide-dl--nb">
+        {% for nb in nbs %}
+          {% assign path = "codice/" | append: page.number | append: "/" | append: nb.file | append: ".ipynb" %}
+          {% assign sol_path = "codice/" | append: page.number | append: "/soluzioni/" | append: nb.file | append: ".ipynb" %}
+          {% assign sp = "/" | append: path %}{% assign esiste = site.static_files | where: 'path', sp | first %}
+          {% assign ssp = "/" | append: sol_path %}{% assign sol = site.static_files | where: 'path', ssp | first %}
+          {% if esiste %}
+          <div class="slide-dl__box">
+            <span class="slide-dl__icon slide-dl__icon--nb" aria-hidden="true">IPYNB</span>
+            <span class="slide-dl__txt"><span class="slide-dl__t">{{ nb.titolo }}</span>{% if nb.descr %}<span class="slide-dl__d">{{ nb.descr }}</span>{% endif %}</span>
+            <span class="slide-dl__azioni">
+              <a href="{{ colab }}/{{ path }}" target="_blank" rel="noopener">Apri in Colab ↗</a>
+              <a href="{{ site.baseurl }}/{{ path }}" download>Scarica ↓</a>
+              {% if sol %}<a href="{{ colab }}/{{ sol_path }}" target="_blank" rel="noopener">Soluzione ↗</a>{% endif %}
+            </span>
+          </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+      {% endif %}
+    {% endfor %}
+  </section>
+  {% endif %}
+
+  {% if page.dati.size > 0 %}
+  <section id="dati">
+    <h2>Dati</h2>
+    <p class="muted">Nei notebook i dati si leggono direttamente dal sito; il file serve solo se vuoi lavorare offline o aprirlo in Excel.</p>
+    <div class="slide-dl slide-dl--codice">
+      {% for d in page.dati %}
+      <a class="slide-dl__box" href="{{ site.baseurl }}/dati/{{ d.file }}" download>
+        <span class="slide-dl__icon slide-dl__icon--csv" aria-hidden="true">CSV</span>
+        <span class="slide-dl__txt"><span class="slide-dl__t">{{ d.file }}</span>{% if d.descr %}<span class="slide-dl__d">{{ d.descr }}</span>{% endif %}</span>
+        <span class="slide-dl__btn">Scarica ↓</span>
+      </a>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  {% assign testo = content | strip_html | strip %}
+  {% if testo.size > 0 %}
+  <section id="lezione" class="modulo__lezione">
+    <h2>Il capitolo</h2>
+    {{ content }}
+  </section>
+  {% endif %}
+
+  <div class="modulo__nav">
+    {% for w in capitoli %}
+      {% assign pn = page.number | minus: 1 %}{% assign nn = page.number | plus: 1 %}
+      {% if w.number == pn %}<a class="btn btn-outline" href="{{ site.baseurl }}{{ w.url }}">← {{ w.number }} · {{ w.title }}</a>{% endif %}
+      {% if w.number == nn %}<a class="btn btn-outline modulo__next" href="{{ site.baseurl }}{{ w.url }}">{{ w.number }} · {{ w.title }} →</a>{% endif %}
+    {% endfor %}
+  </div>
+</div>

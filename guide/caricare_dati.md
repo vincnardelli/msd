@@ -1,129 +1,98 @@
 ---
 layout: page
-title: Caricare i Dati in RStudio
-permalink: /guide/caricare_dati
+title: Dati e modelli in Python
+permalink: /guide/dati_e_modelli
 parent: Guide
-nav_order: 4
+nav_order: 3
 ---
 
-# Caricare i Dati in RStudio
+# 📊 Dati e modelli in Python
 {:.no_toc}
 
-## Table of contents
-{: .no_toc .text-delta }
+Un promemoria delle istruzioni che usiamo nel corso. Ogni notebook comincia con
+
+```python
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import statsmodels.formula.api as smf
+
+DATI = "https://www.vincnardelli.com/msd/dati/"
+```
 
 1. TOC
 {:toc}
 
-## Introduzione
+## Leggere ed esplorare i dati
 
-In questa guida, vedremo come caricare dati in RStudio in tre diversi modi: utilizzando i dati già presenti in R, caricando dati da pacchetti specifici e importando dati da file esterni (come file `.csv` o `.xlsx`).
+| cosa | istruzione |
+|---|---|
+| leggere un CSV | `df = pd.read_csv(DATI + "credit.csv")` |
+| leggere un Excel | `df = pd.read_excel("file.xlsx")` |
+| prime righe | `df.head()` |
+| righe e colonne | `df.shape` |
+| tipi delle colonne | `df.info()` |
+| statistiche di base | `df.describe()` |
+| una colonna | `df["Income"]` |
+| più colonne | `df[["Income", "Balance"]]` |
+| filtrare le righe | `df[df["Income"] > 50]` |
+| frequenze di una variabile qualitativa | `df["Student"].value_counts()` |
+| valori mancanti | `df.isna().sum()` |
+| media, deviazione standard | `df["Income"].mean()`, `df["Income"].std()` |
+| covarianza, correlazione | `df["Income"].cov(df["Balance"])`, `df["Income"].corr(df["Balance"])` |
 
----
+## Grafici
 
-## 1. Dati Già Presenti in R
-
-R include diversi dataset integrati che possono essere utilizzati immediatamente. Ad esempio, il dataset `mtcars` è un dataset integrato con informazioni sulle caratteristiche di diverse automobili.
-
-### Esempio di Utilizzo
-
-Per caricare e visualizzare un dataset già presente in R, basta usare il suo nome:
-
-```r
-# Caricamento e visualizzazione del dataset mtcars
-data(mtcars)
-head(mtcars)
+```python
+plt.hist(df["Income"], bins=30)                 # istogramma
+plt.scatter(df["Income"], df["Balance"])        # grafico a dispersione
+df.boxplot(column="Balance", by="Student")      # boxplot per gruppi
+plt.show()
 ```
 
-Questo codice carica il dataset `mtcars` e ne mostra le prime righe.
+## Regressione lineare
 
----
-
-## 2. Dati da Pacchetti (es. `Ecdat`)
-
-Alcuni pacchetti contengono dataset utili per esercitazioni e analisi specifiche. Dopo aver installato e caricato un pacchetto, i dataset inclusi possono essere caricati facilmente.
-
-### Esempio con il pacchetto `Ecdat`
-
-Il pacchetto `Ecdat` include diversi dataset economici e finanziari utili per analisi statistiche.
-
-1. Installa e carica il pacchetto:
-
-```r
-install.packages("Ecdat")
-library(Ecdat)
+```python
+modello = smf.ols("Balance ~ Income + Student", data=df).fit()
+modello.summary()        # la tabella completa: coefficienti, errori standard, t, p-value, R²
+modello.params           # i coefficienti
+modello.conf_int()       # intervalli di confidenza
+np.sqrt(modello.scale)   # RSE, errore standard dei residui
+modello.predict(pd.DataFrame({"Income": [20, 50], "Student": ["No", "Yes"]}))
 ```
 
-2. Ora puoi caricare uno dei dataset disponibili nel pacchetto, come ad esempio `IncomeInequality`:
+Le variabili qualitative (testo) diventano dummy da sole: nell'output compaiono come `Student[T.Yes]`, rispetto alla categoria di riferimento (la prima in ordine alfabetico). Un nome di colonna con il punto va scritto `Q('Room.Board')`.
 
-```r
-# Caricamento del dataset IncomeInequality da Ecdat
-data(IncomeInequality)
-head(IncomeInequality)
+## Regressione logistica
+
+La variabile dipendente deve essere 0/1:
+
+```python
+df["y"] = (df["default"] == "Yes").astype(int)
+logit = smf.logit("y ~ balance + student", data=df).fit()
+logit.summary()
+np.exp(logit.params)          # odds ratio
+prob = logit.predict(df)      # probabilità
+pred = (prob > 0.5).astype(int)
+pd.crosstab(pred, df["y"], rownames=["Predetto"], colnames=["Effettivo"])   # confusion matrix
+-2 * logit.llf, -2 * logit.llnull, logit.aic   # devianza residua, devianza nulla, AIC
 ```
 
-Questo codice carica il dataset `IncomeInequality`, che contiene informazioni su distribuzione del reddito e disuguaglianza, e ne mostra le prime righe.
+## Alberi e random forest
 
----
+scikit-learn vuole i predittori in una tabella di soli numeri (`X`) e la risposta in `y`:
 
-## 3. Dati da File Esterni
+```python
+from sklearn.tree import DecisionTreeRegressor, plot_tree
+from sklearn.ensemble import RandomForestRegressor
 
-Spesso, i dati vengono salvati in file esterni, come file `.csv` o `.xlsx`. Vediamo come caricare questi file in RStudio, sia tramite l'interfaccia grafica sia tramite codice.
+X = df[["Income", "Limit", "Rating"]]
+y = df["Balance"]
+albero = DecisionTreeRegressor(max_depth=3).fit(X, y)
+plot_tree(albero, feature_names=X.columns, filled=True)
 
-### Formato CSV
-
-Un file **CSV** (Comma-Separated Values) è un file di testo in cui i valori sono separati da virgole o punti e virgola. Ogni riga rappresenta un record, mentre ogni colonna rappresenta un campo di quel record. È un formato semplice e universale per scambiare dati.
-
-#### Consigli per Gestire File CSV
-
-- **Scarica i file senza modificarne il nome**, così come sono, per evitare problemi di compatibilità.
-- Evita di aprire i file CSV con applicazioni come Excel prima di importarli in R. Aprire il file in altre app potrebbe modificarne il formato o i caratteri. Trasferisci invece i file CSV nella cartella del progetto e caricali direttamente.
-- Se hai difficoltà a scaricare il file CSV, prova a fare clic con il **tasto destro del mouse** sul link e scegli l'opzione **"Salva file con nome..."** per salvare il file correttamente.
-
-#### Metodo 1: Interfaccia Grafica
-
-1. Vai al menu **File > Import Dataset > From Text (base)...**.
-2. Seleziona il file `.csv` che desideri importare.
-3. Configura le opzioni di importazione (come il separatore) e clicca su **Import**.
-
-#### Metodo 2: Tramite Codice
-
-Puoi usare la funzione `read.csv()` per caricare un file `.csv` direttamente con il codice:
-
-```r
-# Caricamento di un file CSV
-dati <- read.csv("percorso/del/file.csv")
-head(dati)
+foresta = RandomForestRegressor(n_estimators=500, oob_score=True, random_state=123).fit(X, y)
+foresta.feature_importances_  # importanza delle variabili
 ```
 
-Sostituisci `"percorso/del/file.csv"` con il percorso corretto del file.
-
-### Formato XLSX
-
-Un file **XLSX** è un file di foglio di calcolo creato da Microsoft Excel. A differenza di un file CSV, può contenere più fogli e una formattazione avanzata. Per leggere un file `.xlsx` in R, è necessario utilizzare un pacchetto come `readxl`.
-
-#### Metodo 1: Interfaccia Grafica
-
-1. Vai al menu **File > Import Dataset > From Excel...**.
-2. Seleziona il file `.xlsx` da importare e configura le opzioni.
-3. Clicca su **Import** per caricare i dati.
-
-#### Metodo 2: Tramite Codice
-
-Dopo aver installato e caricato `readxl`, puoi utilizzare la funzione `read_excel()`:
-
-```r
-# Installazione del pacchetto readxl (se non già installato)
-install.packages("readxl")
-library(readxl)
-
-# Caricamento di un file Excel
-dati <- read_excel("percorso/del/file.xlsx")
-head(dati)
-```
-
-Sostituisci `"percorso/del/file.xlsx"` con il percorso corretto del file.
-
----
-
-Con questa guida, ora sai come caricare dati in RStudio utilizzando diversi metodi, sia per i dataset integrati in R, quelli inclusi in pacchetti come `Ecdat`, sia per i file esterni `.csv` e `.xlsx`. Utilizza questi approcci per iniziare ad analizzare i tuoi dati in modo efficace!
+Per la classificazione si usano `DecisionTreeClassifier` e `RandomForestClassifier`.

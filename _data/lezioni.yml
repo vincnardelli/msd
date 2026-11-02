@@ -1,0 +1,62 @@
+# Calendario ufficiale CEZ089 (1° semestre 2026/27, docenti.unicatt.it).
+# Solo date, orari e aule: le lezioni non sono legate ai capitoli.
+- n: 1
+  data: '2026-11-02'
+  giorno: lunedì
+  ora: 17:00 – 19:00
+  aula: Aula 201
+- n: 2
+  data: '2026-11-03'
+  giorno: martedì
+  ora: 14:00 – 17:00
+  aula: Aula 201
+- n: 3
+  data: '2026-11-09'
+  giorno: lunedì
+  ora: 17:00 – 19:00
+  aula: Aula 201
+- n: 4
+  data: '2026-11-10'
+  giorno: martedì
+  ora: 14:00 – 17:00
+  aula: Aula 201
+- n: 5
+  data: '2026-11-17'
+  giorno: martedì
+  ora: 14:00 – 16:00
+  aula: Aula 201
+- n: 6
+  data: '2026-11-18'
+  giorno: mercoledì
+  ora: 14:00 – 17:00
+  aula: Aula 201
+- n: 7
+  data: '2026-11-24'
+  giorno: martedì
+  ora: 14:00 – 16:00
+  aula: Aula 201
+- n: 8
+  data: '2026-11-25'
+  giorno: mercoledì
+  ora: 14:00 – 17:00
+  aula: Aula 201
+- n: 9
+  data: '2026-12-01'
+  giorno: martedì
+  ora: 14:00 – 16:00
+  aula: Aula 201
+- n: 10
+  data: '2026-12-02'
+  giorno: mercoledì
+  ora: 14:00 – 17:00
+  aula: Aula 201
+- n: 11
+  data: '2026-12-07'
+  giorno: lunedì
+  ora: 17:00 – 19:00
+  aula: Aula 201
+- n: 12
+  data: '2026-12-09'
+  giorno: mercoledì
+  ora: 14:00 – 17:00
+  aula: Aula 201

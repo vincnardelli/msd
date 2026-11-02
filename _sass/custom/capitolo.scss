@@ -1,0 +1,42 @@
+// ── Pagina capitolo: download di slide, notebook e dati; calendario (ripreso dal sito CIA) ──
+
+$p4: #d97706;   // Verso l'esame
+
+.slide-frame { width: 100%; height: 70vh; min-height: 420px; border: 1px solid $line; border-radius: 10px; background: #fff; }
+.slide-dl { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; margin: .75rem 0 1rem; }
+.slide-dl__box {
+  display: flex; align-items: center; gap: 14px; padding: 14px 16px; border: 1px solid $line; border-radius: 10px;
+  background: #fff; color: $ink !important; text-decoration: none !important; transition: border-color .15s, box-shadow .15s;
+  &:hover { border-color: $p1; box-shadow: 0 4px 14px rgba(37,99,235,.12); }
+}
+.slide-dl__icon { flex: 0 0 auto; width: 44px; height: 52px; border-radius: 6px; background: #dc2626; color: #fff; font-size: 12px; font-weight: 800; letter-spacing: .04em; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 8px; }
+.slide-dl--codice { grid-template-columns: repeat(auto-fill, minmax(275px, 1fr)); }
+.slide-dl--codice .slide-dl__t { white-space: nowrap; font-size: 15px; }
+.slide-dl--codice .slide-dl__icon { width: 34px; height: 40px; }
+.slide-dl__box .slide-dl__icon--r { background: #276DC3; font-size: 16px; align-items: center; padding-bottom: 0; }
+.slide-dl__box .slide-dl__icon--csv { background: #16a34a; font-size: 10px; align-items: center; padding-bottom: 0; }
+.slide-dl__txt { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; }
+.slide-dl__t { font-weight: 700; font-size: 16px; }
+.slide-dl__d { color: $muted; font-size: 13.5px; }
+.slide-dl__btn { flex: 0 0 auto; font-size: 13.5px; font-weight: 700; color: $p1; white-space: nowrap; }
+.modulo__ai { margin-top: 2rem; }
+.slide-dl__box .slide-dl__icon--nb { background: #f37626; font-size: 10px; align-items: center; padding-bottom: 0; }
+.slide-dl__box .slide-dl__icon--sol { background: #059669; font-size: 10px; align-items: center; padding-bottom: 0; }
+.slide-dl__azioni { flex: 0 0 auto; display: flex; flex-direction: column; gap: 4px; align-items: flex-end;
+  a { font-size: 13.5px; font-weight: 700; color: $p1; white-space: nowrap; text-decoration: none; &:hover { text-decoration: underline; } } }
+.slide-dl--codice .slide-dl__box { cursor: default; }
+.notebook-gruppo { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: $muted; font-weight: 700; margin: 1.2rem 0 0; }
+
+// quarta sezione: verso l'esame
+.tag.tag--p4 { border-color: $p4; color: $p4; }
+.sezione.sezione--4 { border-top-color: $p4; .sezione__n { color: $p4; } }
+.modulo-row.modulo-row--p4 .modulo-row__n { color: $p4; }
+.sezione-h.sezione-h--4 { border-color: $p4; }
+.modulo--p4 .modulo__num { background: $p4; }
+.sezioni--4 { grid-template-columns: repeat(4, 1fr); @media (max-width: 1000px) { grid-template-columns: repeat(2, 1fr); } @media (max-width: 600px) { grid-template-columns: 1fr; } }
+
+// ── calendario ──
+.calendario { width: 100%; font-size: 14px; th, td { padding: 6px 10px; } tr.is-past td { color: $muted; } tr.is-today td { background: #fef3c7; } }
+
+// notebook: titoli lunghi che vanno a capo, accanto ai link Colab / Scarica / Soluzione
+.slide-dl--nb { grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); .slide-dl__t { white-space: normal; } }

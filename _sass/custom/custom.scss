@@ -6,6 +6,9 @@
 @import 'module';
 @import 'schedule';
 @import 'staffer';
+@import 'corso';
+@import 'topbar';
+@import 'capitolo';
 
 p{
   font-size: 18px;
@@ -35,10 +38,6 @@ summary {
   @extend .btn, .btn-outline;
 }
 
-.main-content-wrap {
-  max-width: $content-width;
-  margin: auto;
-}
 
 .main-content {
   dl {
