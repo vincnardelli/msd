@@ -1,7 +1,7 @@
 # Calendario ufficiale CEZ089 (1° semestre 2026/27, docenti.unicatt.it).
 # Solo date, orari e aule: le lezioni non sono legate ai capitoli.
 # tipo: lezione (Vincenzo Nardelli) o esercitazione (programmazione con Python
-# applicata a statistica e finanza aziendale, Francesca Cardile).
+# applicata a statistica e finanza aziendale, Francesca Cardile o Niccolò Salvini).
 - n: 1
   data: '2026-11-02'
   giorno: lunedì
@@ -92,3 +92,21 @@
   aula: Aula 201
   tipo: esercitazione
   docente: Francesca Cardile
+- n: 11
+  data: '2026-12-07'
+  giorno: lunedì
+  ora: 17:00 – 19:00
+  aula: Aula 201
+  tipo: lezione
+- n: 12
+  data: '2026-12-09'
+  giorno: mercoledì
+  ora: 14:00 – 17:00
+  aula: Aula 201
+  tipo: lezione
+- data: '2026-12-11'
+  giorno: venerdì
+  ora: 14:00 – 17:00
+  aula: Aula 201
+  tipo: esercitazione
+  docente: Niccolò Salvini

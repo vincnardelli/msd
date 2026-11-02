@@ -2,7 +2,7 @@
 layout: page
 title: Calendario
 permalink: /schedule/
-description: Le 10 lezioni e le 5 esercitazioni del corso, con giorno, ora e aula
+description: Le 12 lezioni e le 6 esercitazioni del corso, con giorno, ora e aula
 nav_order: 9
 ---
 
@@ -29,6 +29,6 @@ Il calendario ufficiale, con eventuali variazioni, è sulla [pagina del corso su
 </tbody>
 </table>
 
-Tutto in **aula 201**. Attenzione all'orario delle lezioni, che cambia con il giorno: il **lunedì** (2 e 9 novembre) dalle **17:00 alle 19:00**; il **martedì** dalle **14:00 alle 17:00** il 3 e il 10 novembre, dalle **14:00 alle 16:00** dal 17 novembre; il **mercoledì** dalle **14:00 alle 17:00**.
+Tutto in **aula 201**. Attenzione all'orario delle lezioni, che cambia con il giorno: il **lunedì** (2 e 9 novembre, 7 dicembre) dalle **17:00 alle 19:00**; il **martedì** dalle **14:00 alle 17:00** il 3 e il 10 novembre, dalle **14:00 alle 16:00** dal 17 novembre; il **mercoledì** dalle **14:00 alle 17:00**.
 
-Le **esercitazioni** sono di programmazione con Python applicata alla statistica e alla finanza aziendale, con Francesca Cardile (il 27 novembre con Niccolò Salvini).
+Le **esercitazioni** sono di programmazione con Python applicata alla statistica e alla finanza aziendale, con Francesca Cardile (il 27 novembre e l'11 dicembre con Niccolò Salvini).
