@@ -2,7 +2,7 @@
 layout: page
 title: Calendario
 permalink: /schedule/
-description: Le 12 lezioni del corso, con giorno, ora e aula
+description: Le 10 lezioni e le 5 esercitazioni del corso, con giorno, ora e aula
 nav_order: 9
 ---
 
@@ -14,18 +14,21 @@ Il calendario ufficiale, con eventuali variazioni, è sulla [pagina del corso su
 {% assign mesi = 'gennaio|febbraio|marzo|aprile|maggio|giugno|luglio|agosto|settembre|ottobre|novembre|dicembre' | split: '|' %}
 
 <table class="calendario">
-<thead><tr><th>#</th><th>data</th><th>ora</th><th>aula</th></tr></thead>
+<thead><tr><th>#</th><th>data</th><th>ora</th><th>cosa</th><th>aula</th></tr></thead>
 <tbody>
 {% for l in site.data.lezioni %}
 {% assign dstr = l.data | date: '%Y-%m-%d' %}
-<tr class="{% if dstr < oggi %}is-past{% elsif dstr == oggi %}is-today{% endif %}">
+<tr class="{% if dstr < oggi %}is-past{% elsif dstr == oggi %}is-today{% endif %}{% if l.tipo == 'esercitazione' %} is-eserc{% endif %}">
   <td class="muted">{{ l.n }}</td>
   {% assign mi = l.data | date: '%-m' | minus: 1 %}<td><strong>{{ l.giorno }} {{ l.data | date: '%-d' }} {{ mesi[mi] }}</strong></td>
   <td>{{ l.ora }}</td>
+  <td>{% if l.tipo == 'esercitazione' %}Esercitazione <span class="muted">· {{ l.docente }}</span>{% else %}Lezione{% endif %}</td>
   <td class="muted">{{ l.aula }}</td>
 </tr>
 {% endfor %}
 </tbody>
 </table>
 
-Le lezioni sono tutte in **aula 201**. Attenzione all'orario, che cambia con il giorno: il **lunedì** (2 e 9 novembre, 7 dicembre) dalle **17:00 alle 19:00**; il **martedì** dalle **14:00 alle 17:00** il 3 e il 10 novembre, dalle **14:00 alle 16:00** dal 17 novembre; il **mercoledì** dalle **14:00 alle 17:00**.
+Tutto in **aula 201**. Attenzione all'orario delle lezioni, che cambia con il giorno: il **lunedì** (2 e 9 novembre) dalle **17:00 alle 19:00**; il **martedì** dalle **14:00 alle 17:00** il 3 e il 10 novembre, dalle **14:00 alle 16:00** dal 17 novembre; il **mercoledì** dalle **14:00 alle 17:00**.
+
+Le **esercitazioni** sono di programmazione con Python applicata alla statistica e alla finanza aziendale, con Francesca Cardile (il 27 novembre con Niccolò Salvini).

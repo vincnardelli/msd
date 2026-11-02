@@ -1,10 +1,10 @@
 ---
 number: 1
-title: Data driven decision making
+title: Decidere con i dati nell'era dell'AI
 sezione: 1
-idea: "Prima di qualunque modello: i dati possono portare a decisioni sbagliate, e la statistica descrittiva da sola non basta."
+idea: "Prima di qualunque modello: cosa resta a noi quando la macchina calcola, e perché i dati, letti male, portano a decisioni sbagliate."
 slides_pdf: slide/lezione_1.pdf
-concepts_new: [DIKW, rischi dei modelli, indici di centralità, indici di variabilità, covarianza, correlazione, correlazione spuria, apprendimento supervisionato, notebook Python, pandas]
+concepts_new: [AI e lavoro, manager e data scientist, delega e controllo, Software 1.0/2.0/3.0, DIKW, funzioni aziendali e casi, allucinazioni, responsabilità decisionali, indici di centralità, indici di variabilità, covarianza, correlazione, correlazione spuria, apprendimento supervisionato, notebook Python, pandas]
 concepts_required: []
 notebook:
   - file: python_base
@@ -20,8 +20,9 @@ dati:
     descr: Reddito mediano e felicità in 111 paesi
 ---
 
-- Introduzione al corso
-- Data driven decision making: il framework DIKW e i rischi operativi dei modelli di AI
-- Statistica descrittiva univariata e bivariata
-- Software 1.0, 2.0 e 3.0; apprendimento statistico e machine learning
+- Perché questo corso, oggi: l'AI nelle imprese italiane, i lavori esposti, la competenza che conta; manager e data scientist
+- Dai dati alla decisione: delegare senza sparire, i tre modi di far fare qualcosa a una macchina, la piramide DIKW riletta con l'AI
+- Quando i dati portano a decisioni sbagliate: i casi classici per funzione aziendale, gli errori recenti con l'AI generativa, la responsabilità
+- Leggere i dati: statistica descrittiva univariata e bivariata sui rendimenti di Borsa, correlazioni spurie, Datasaurus
+- Come le macchine imparano: apprendimento statistico, regressione e classificazione
 - Primi passi con Python in Google Colab

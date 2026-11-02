@@ -16,8 +16,8 @@ seo:
 {% assign prossima = nil %}{% for l in site.data.lezioni %}{% assign dstr = l.data | date: '%Y-%m-%d' %}{% if dstr >= oggi and prossima == nil %}{% assign prossima = l %}{% endif %}{% endfor %}
 {% if prossima %}{% assign mesi = 'gennaio|febbraio|marzo|aprile|maggio|giugno|luglio|agosto|settembre|ottobre|novembre|dicembre' | split: '|' %}{% assign mi = prossima.data | date: '%-m' | minus: 1 %}
 <div class="dove-siamo">
-  <span class="dove-siamo__k">{% if prossima.data == oggi %}Oggi{% else %}Prossima lezione{% endif %}</span>
-  <span class="dove-siamo__t">{{ prossima.giorno }} {{ prossima.data | date: '%-d' }} {{ mesi[mi] }}, {{ prossima.ora }}, {{ prossima.aula }}</span>
+  <span class="dove-siamo__k">{% if prossima.data == oggi %}Oggi{% elsif prossima.tipo == 'esercitazione' %}Prossima esercitazione{% else %}Prossima lezione{% endif %}</span>
+  <span class="dove-siamo__t">{{ prossima.giorno }} {{ prossima.data | date: '%-d' }} {{ mesi[mi] }}, {{ prossima.ora }}, {{ prossima.aula }}{% if prossima.tipo == 'esercitazione' %} · {{ prossima.docente }}{% endif %}</span>
   <a class="muted" href="{{ site.baseurl }}/schedule/">tutto il calendario →</a>
 </div>
 {% endif %}
@@ -43,11 +43,16 @@ Al termine del corso, gli studenti saranno in grado di applicare i concetti teor
 {% assign sez_t = "Dati e decisioni|Modelli di regressione|Alberi e random forest|Verso l'esame" | split: "|" %}
 {% assign sez_d = "Perché decidere con i dati, cosa può andare storto, e la statistica descrittiva che serve prima di ogni modello.|Il modello lineare per prevedere un numero, il modello logistico per prevedere un sì o un no, e come scegliere la soglia.|Alberi decisionali e random forest, a confronto con i modelli di regressione.|Una prova d'esame completa, risolta insieme." | split: "|" %}
 {% for p in (1..4) %}{% assign i = p | minus: 1 %}{% assign del_sez = capitoli | where: 'sezione', p %}{% assign primo = del_sez | first %}{% assign ultimo = del_sez | last %}
+{% if del_sez.size > 0 %}
   <a href="{{ site.baseurl }}{{ primo.url }}" class="sezione sezione--{{ p }}">
     <div class="sezione__n">{% if primo.number == ultimo.number %}Capitolo {{ primo.number }}{% else %}Capitoli {{ primo.number }}–{{ ultimo.number }}{% endif %}</div>
+{% else %}
+  <div class="sezione sezione--{{ p }}">
+    <div class="sezione__n">In arrivo</div>
+{% endif %}
     <div class="sezione__t">{{ sez_t[i] }}</div>
     <div class="sezione__d">{{ sez_d[i] }}</div>
-  </a>
+  {% if del_sez.size > 0 %}</a>{% else %}</div>{% endif %}
 {% endfor %}
 </div>
 
