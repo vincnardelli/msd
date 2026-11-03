@@ -14,13 +14,31 @@ seo:
 {% assign capitoli = site.capitoli | sort: 'number' %}
 {% assign oggi = 'now' | date: '%Y-%m-%d' %}
 {% assign prossima = nil %}{% for l in site.data.lezioni %}{% assign dstr = l.data | date: '%Y-%m-%d' %}{% if dstr >= oggi and prossima == nil %}{% assign prossima = l %}{% endif %}{% endfor %}
-{% if prossima %}{% assign mesi = 'gennaio|febbraio|marzo|aprile|maggio|giugno|luglio|agosto|settembre|ottobre|novembre|dicembre' | split: '|' %}{% assign mi = prossima.data | date: '%-m' | minus: 1 %}
-<div class="dove-siamo">
-  <span class="dove-siamo__k">{% if prossima.data == oggi %}Oggi{% elsif prossima.tipo == 'esercitazione' %}Prossima esercitazione{% else %}Prossima lezione{% endif %}</span>
-  <span class="dove-siamo__t">{{ prossima.giorno }} {{ prossima.data | date: '%-d' }} {{ mesi[mi] }}, {{ prossima.ora }}, {{ prossima.aula }}{% if prossima.tipo == 'esercitazione' %} · {{ prossima.docente }}{% endif %}</span>
+{% assign mesi = 'gennaio|febbraio|marzo|aprile|maggio|giugno|luglio|agosto|settembre|ottobre|novembre|dicembre' | split: '|' %}
+<div class="dove-siamo" id="dove-siamo"{% unless prossima %} hidden{% endunless %}>
+  <span class="dove-siamo__k" id="ds-k">{% if prossima %}{% if prossima.data == oggi %}Oggi{% elsif prossima.tipo == 'esercitazione' %}Prossima esercitazione{% else %}Prossima lezione{% endif %}{% endif %}</span>
+  <span class="dove-siamo__t" id="ds-t">{% if prossima %}{% assign mi = prossima.data | date: '%-m' | minus: 1 %}{{ prossima.giorno }} {{ prossima.data | date: '%-d' }} {{ mesi[mi] }}, {{ prossima.ora }}, {{ prossima.aula }}{% if prossima.tipo == 'esercitazione' %} · {{ prossima.docente }}{% endif %}{% endif %}</span>
   <a class="muted" href="{{ site.baseurl }}/schedule/">tutto il calendario →</a>
 </div>
-{% endif %}
+<script>
+// La prossima lezione si calcola nel browser, così il banner resta giusto anche senza ricostruire il sito.
+(function(){
+  var L=[{% for l in site.data.lezioni %}{"d":"{{ l.data }}","g":"{{ l.giorno }}","o":"{{ l.ora }}","a":"{{ l.aula }}","t":"{{ l.tipo }}","doc":"{{ l.docente }}"}{% unless forloop.last %},{% endunless %}{% endfor %}];
+  var mesi="gennaio|febbraio|marzo|aprile|maggio|giugno|luglio|agosto|settembre|ottobre|novembre|dicembre".split("|");
+  var now=new Date(), box=document.getElementById("dove-siamo");
+  function at(d,hm){var p=d.split("-"),q=hm.split(":");return new Date(+p[0],+p[1]-1,+p[2],+q[0],+q[1]);}
+  for(var i=0;i<L.length;i++){
+    var l=L[i], ore=l.o.split(/\s*[–-]\s*/), ini=at(l.d,ore[0]), fine=at(l.d,ore[1]||ore[0]);
+    if(fine<now) continue;
+    var k = now>=ini ? "In corso" : (ini.toDateString()===now.toDateString() ? "Oggi" : (l.t==="esercitazione" ? "Prossima esercitazione" : "Prossima lezione"));
+    var p=l.d.split("-");
+    document.getElementById("ds-k").textContent=k;
+    document.getElementById("ds-t").textContent=l.g+" "+(+p[2])+" "+mesi[+p[1]-1]+", "+l.o+", "+l.a+(l.t==="esercitazione"?" · "+l.doc:"");
+    box.hidden=false; return;
+  }
+  box.hidden=true;
+})();
+</script>
 
 **Metodi Matematici e Statistici per le Decisioni Economiche** è un corso del corso di laurea magistrale in **Management, Imprese e Mercati** presso la Facoltà di **Economia** dell'Università Cattolica del Sacro Cuore, sede di Roma. Il corso è strutturato in due moduli principali, matematico e statistico ed è progettato per fornire competenze essenziali nella rappresentazione e nell'analisi dei problemi economici, statistici e finanziari.
 
