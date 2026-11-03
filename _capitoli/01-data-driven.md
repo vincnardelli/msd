@@ -6,8 +6,18 @@ idea: "Prima di qualunque modello: cosa resta a noi quando la macchina calcola, 
 slides_pdf: slide/lezione_1.pdf
 concepts_new: [AI e lavoro, manager e data scientist, delega e controllo, Software 1.0/2.0/3.0, DIKW, funzioni aziendali e casi, allucinazioni, responsabilità decisionali, indici di centralità, indici di variabilità, covarianza, correlazione, correlazione spuria, apprendimento supervisionato]
 concepts_required: []
-notebook: []
-dati: []
+notebook:
+  - file: python_base
+    tipo: lezione
+    titolo: Primi passi con Python
+    descr: Variabili, liste, tabelle, un grafico
+  - file: happiness
+    tipo: lab
+    titolo: I soldi fanno la felicità?
+    descr: Media, mediana, istogrammi, boxplot, correlazione
+dati:
+  - file: happiness.csv
+    descr: Reddito mediano e felicità in 111 paesi
 explorations: [misure-descrittive]
 ---
 
@@ -16,3 +26,4 @@ explorations: [misure-descrittive]
 - Quando i dati portano a decisioni sbagliate: i casi classici per funzione aziendale, gli errori recenti con l'AI generativa, la responsabilità
 - Leggere i dati: statistica descrittiva univariata e bivariata sui rendimenti di Borsa, correlazioni spurie, Datasaurus
 - Come le macchine imparano: apprendimento statistico, regressione e classificazione
+- Primi passi con Python in Google Colab: polars e plotnine sul dataset della felicità
