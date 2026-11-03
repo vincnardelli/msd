@@ -60,7 +60,7 @@ layout: default
   {% if page.notebook.size > 0 %}
   <section id="notebook">
     <h2>Notebook</h2>
-    <p class="muted">Si aprono in Google Colab con un clic, oppure si scaricano e si aprono in Jupyter (vedi le <a href="{{ site.baseurl }}/guide/">guide</a>). Le soluzioni compaiono qui dopo la lezione.</p>
+    <p class="muted">Si aprono in Google Colab con un clic (vedi le <a href="{{ site.baseurl }}/guide/">guide</a>). Le soluzioni compaiono qui dopo la lezione.</p>
     {% assign gruppi = "lezione|lab" | split: "|" %}
     {% for gruppo in gruppi %}
       {% assign nbs = page.notebook | where: 'tipo', gruppo %}

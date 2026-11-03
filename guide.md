@@ -8,6 +8,4 @@ nav_order: 7
 
 # 📕 Guide
 
-Guide utili per seguire il corso: dove far girare i notebook, come leggere i dati, come leggere l'output dei modelli.
-
-{:toc}
+Guide pratiche per seguire il corso: come lavorare in Google Colab e le istruzioni di polars e plotnine che usiamo nei notebook.
