@@ -17,4 +17,12 @@ layout: default
   <div class="via"><div class="via__k">In arrivo</div>Questa esplorazione sarà pubblicata con il capitolo {{ page.capitolo }}.</div>
   {% endif %}
   {{ content }}
+  {% if page.dataset.size > 0 %}
+  <h2>I dati</h2>
+  <div class="espl-grid">
+  {% for s in page.dataset %}{% assign ds = site.dataset | where: 'slug', s | first %}{% if ds %}
+    <a class="espl-card" href="{{ site.baseurl }}{{ ds.url }}"><div class="espl-card__title">{{ ds.title }}</div><div class="espl-card__q">{{ ds.idea }}</div><div class="muted"><code>{{ ds.file }}</code></div></a>
+  {% endif %}{% endfor %}
+  </div>
+  {% endif %}
 </div>

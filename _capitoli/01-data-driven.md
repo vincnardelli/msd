@@ -11,9 +11,10 @@ notebook:
     tipo: lab
     titolo: I soldi fanno la felicità?
     descr: Media, mediana, istogrammi, boxplot, correlazione
+    dataset: happiness
 dati:
   - file: happiness.csv
-    descr: Reddito mediano e felicità in 111 paesi
+dataset: [happiness]
 explorations: [misure-descrittive]
 ---
 

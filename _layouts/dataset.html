@@ -1,0 +1,68 @@
+---
+layout: default
+---
+{% assign capitoli = site.capitoli | sort: 'number' %}
+<div class="dataset">
+  <div class="modulo__kicker"><span class="tag">Dataset</span> <span class="tag tag--lang">CSV</span></div>
+  <h1 class="dataset__title">{{ page.title }}</h1>
+  <p class="modulo__idea">{{ page.idea }}</p>
+
+  <div class="dataset__box">
+    <div class="dataset__row"><span class="k">File</span><code>{{ page.file }}</code> <span class="muted" id="ds-n"></span> <a class="btn btn-outline btn-sm" href="{{ site.baseurl }}/dati/{{ page.file }}" download>Scarica ↓</a></div>
+    <div class="dataset__row"><span class="k">In Python</span><button class="btn btn-outline btn-sm" id="ds-copy" type="button">Copia</button></div>
+<pre class="highlight"><code id="ds-code">import polars as pl
+{{ page.var }} = pl.read_csv("https://www.vincnardelli.com/msd/dati/{{ page.file }}")</code></pre>
+  </div>
+
+  <h2>Anteprima</h2>
+  <div class="dataset__preview"><table id="ds-preview"><tbody><tr><td class="muted">carico il file…</td></tr></tbody></table></div>
+
+  {% assign usi_cap = capitoli | where_exp: "w", "w.dataset contains page.slug" %}
+  {% assign usi_esp = site.esplorazioni | where_exp: "e", "e.dataset contains page.slug" %}
+  {% if usi_cap.size > 0 or usi_esp.size > 0 %}
+  <h2>Dove si usa</h2>
+  <div class="slide-dl slide-dl--codice slide-dl--nb">
+    {% for w in usi_cap %}
+    <a class="slide-dl__box" href="{{ site.baseurl }}{{ w.url }}">
+      <span class="slide-dl__icon" aria-hidden="true">PDF</span>
+      <span class="slide-dl__txt"><span class="slide-dl__t">Capitolo {{ w.number }} · {{ w.title }}</span><span class="slide-dl__d">{{ w.idea }}</span></span>
+      <span class="slide-dl__btn">Vai al capitolo →</span>
+    </a>
+    {% for nb in w.notebook %}{% if nb.dataset == page.slug %}
+    {% assign path = "codice/" | append: w.number | append: "/" | append: nb.file | append: ".ipynb" %}
+    <div class="slide-dl__box">
+      <span class="slide-dl__icon slide-dl__icon--nb" aria-hidden="true">IPYNB</span>
+      <span class="slide-dl__txt"><span class="slide-dl__t">{{ nb.titolo }}</span>{% if nb.descr %}<span class="slide-dl__d">{{ nb.descr }}</span>{% endif %}</span>
+      <span class="slide-dl__azioni">
+        <a href="https://colab.research.google.com/github/vincnardelli/msd/blob/main/{{ path }}" target="_blank" rel="noopener">Apri in Colab ↗</a>
+        <a href="{{ site.baseurl }}/{{ path }}" download>Scarica ↓</a>
+      </span>
+    </div>
+    {% endif %}{% endfor %}
+    {% endfor %}
+    {% for e in usi_esp %}
+    <a class="slide-dl__box" href="{{ site.baseurl }}{{ e.url }}">
+      <span class="slide-dl__icon slide-dl__icon--espl" aria-hidden="true">ESPL</span>
+      <span class="slide-dl__txt"><span class="slide-dl__t">Esplorazione · {{ e.title }}</span><span class="slide-dl__d">{{ e.question }}</span></span>
+      <span class="slide-dl__btn">Apri →</span>
+    </a>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <section class="dataset__testo">{{ content }}</section>
+</div>
+<script>
+(function(){
+  var cb=document.getElementById('ds-copy');if(cb)cb.onclick=function(){navigator.clipboard.writeText(document.getElementById('ds-code').textContent).then(function(){cb.textContent='Copiato ✓';setTimeout(function(){cb.textContent='Copia';},1500);});};
+  var url='{{ site.baseurl }}/dati/{{ page.file }}',tb=document.getElementById('ds-preview'),n=document.getElementById('ds-n');
+  fetch(url).then(function(r){return r.text();}).then(function(txt){
+    var rows=txt.trim().split(/\r?\n/).map(function(l){return l.split(',');}),head=rows[0],body=rows.slice(1);
+    n.textContent='· '+body.length+' righe · '+head.length+' colonne';
+    var h='<thead><tr>'+head.map(function(c){return '<th>'+c+'</th>';}).join('')+'</tr></thead><tbody>';
+    body.slice(0,8).forEach(function(r){h+='<tr>'+r.map(function(c){var x=+c;return '<td'+(isNaN(x)||c===''?'':' class="num"')+'>'+(isNaN(x)||c===''?c:(Math.abs(x)>=100?Math.round(x):+x.toFixed(2)).toLocaleString('it-IT'))+'</td>';}).join('')+'</tr>';});
+    if(body.length>8)h+='<tr><td colspan="'+head.length+'" class="muted">… altre '+(body.length-8)+' righe</td></tr>';
+    tb.innerHTML=h+'</tbody>';
+  }).catch(function(){tb.innerHTML='<tbody><tr><td class="muted">anteprima non disponibile</td></tr></tbody>';});
+})();
+</script>

@@ -77,6 +77,7 @@ layout: default
             <span class="slide-dl__icon slide-dl__icon--nb" aria-hidden="true">IPYNB</span>
             <span class="slide-dl__txt"><span class="slide-dl__t">{{ nb.titolo }}</span>{% if nb.descr %}<span class="slide-dl__d">{{ nb.descr }}</span>{% endif %}</span>
             <span class="slide-dl__azioni">
+              {% if nb.dataset %}{% assign nds = site.dataset | where: 'slug', nb.dataset | first %}{% if nds %}<a href="{{ site.baseurl }}{{ nds.url }}">Dati: {{ nds.file }} →</a>{% endif %}{% endif %}
               <a href="{{ colab }}/{{ path }}" target="_blank" rel="noopener">Apri in Colab ↗</a>
               <a href="{{ site.baseurl }}/{{ path }}" download>Scarica ↓</a>
               {% if sol %}<a href="{{ colab }}/{{ sol_path }}" target="_blank" rel="noopener">Soluzione ↗</a>{% endif %}
@@ -93,14 +94,18 @@ layout: default
   {% if page.dati.size > 0 %}
   <section id="dati">
     <h2>Dati</h2>
-    <p class="muted">Nei notebook i dati si leggono direttamente dal sito; il file serve solo se vuoi lavorare offline o aprirlo in Excel.</p>
-    <div class="slide-dl slide-dl--codice">
+    <p class="muted">Nei notebook i dati si leggono direttamente dal sito. Ogni dataset ha la sua pagina con anteprima, descrizione e codice.</p>
+    <div class="slide-dl slide-dl--codice slide-dl--nb">
       {% for d in page.dati %}
-      <a class="slide-dl__box" href="{{ site.baseurl }}/dati/{{ d.file }}" download>
+      {% assign ds = site.dataset | where: 'file', d.file | first %}
+      <div class="slide-dl__box">
         <span class="slide-dl__icon slide-dl__icon--csv" aria-hidden="true">CSV</span>
-        <span class="slide-dl__txt"><span class="slide-dl__t">{{ d.file }}</span>{% if d.descr %}<span class="slide-dl__d">{{ d.descr }}</span>{% endif %}</span>
-        <span class="slide-dl__btn">Scarica ↓</span>
-      </a>
+        <span class="slide-dl__txt"><span class="slide-dl__t">{% if ds %}{{ ds.title }}{% else %}{{ d.file }}{% endif %}</span><span class="slide-dl__d">{% if d.descr %}{{ d.descr }}{% elsif ds %}{{ ds.idea }}{% endif %}</span></span>
+        <span class="slide-dl__azioni">
+          {% if ds %}<a href="{{ site.baseurl }}{{ ds.url }}">Scheda del dataset →</a>{% endif %}
+          <a href="{{ site.baseurl }}/dati/{{ d.file }}" download>Scarica ↓</a>
+        </span>
+      </div>
       {% endfor %}
     </div>
   </section>
