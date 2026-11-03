@@ -8,6 +8,7 @@ concepts_new: [AI e lavoro, manager e data scientist, delega e controllo, Softwa
 concepts_required: []
 notebook: []
 dati: []
+explorations: [misure-descrittive]
 ---
 
 - Perché questo corso, oggi: l'AI nelle imprese italiane, i lavori esposti, la competenza che conta; manager e data scientist

@@ -39,6 +39,9 @@ collections:
   capitoli:
     output: true
     permalink: /capitolo/:name/
+  esplorazioni:
+    output: true
+    permalink: /esplorazioni/:name/
 # Default layouts for each collection type
 defaults:
   - scope:
@@ -57,6 +60,12 @@ defaults:
       type: capitoli
     values:
       layout: capitolo
+  - scope:
+      path: ''
+      type: esplorazioni
+    values:
+      layout: esplorazione
+      nav_exclude: true
 
 compress_html:
   clippings: all

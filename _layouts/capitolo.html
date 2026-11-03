@@ -106,6 +106,24 @@ layout: default
   </section>
   {% endif %}
 
+  {% if page.explorations.size > 0 %}
+  <section id="esplorazioni" class="modulo__espl">
+    <h2>Esplorazioni</h2>
+    <p class="muted">Pagine interattive: si gira un controllo e si guarda cosa succede alle misure della lezione.</p>
+    <div class="espl-grid">
+      {% for slug in page.explorations %}
+        {% assign e = site.esplorazioni | where: 'slug', slug | first %}
+        {% if e %}
+        <a class="espl-card" href="{{ site.baseurl }}{{ e.url }}">
+          <div class="espl-card__title">{{ e.title }}</div>
+          <div class="espl-card__q">{{ e.question }}</div>
+        </a>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
   {% assign testo = content | strip_html | strip %}
   {% if testo.size > 0 %}
   <section id="lezione" class="modulo__lezione">

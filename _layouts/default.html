@@ -46,6 +46,7 @@ layout: table_wrappers
             {%- assign active = false -%}
             {%- if page.url == node.url or page.parent == node.title or page.grand_parent == node.title -%}{%- assign active = true -%}{%- endif -%}
             {%- if page.collection == "capitoli" and node.url == "/corso/" -%}{%- assign active = true -%}{%- endif -%}
+            {%- if page.collection == "esplorazioni" and node.url == "/esplorazioni/" -%}{%- assign active = true -%}{%- endif -%}
             <li class="topbar__item{% if node.has_children %} has-children{% endif %}{% if active %} active{% endif %}">
               <a href="{{ node.url | relative_url }}" class="topbar__link">{{ node.title }}</a>
               {%- if node.has_children -%}
