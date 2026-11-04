@@ -1,0 +1,82 @@
+---
+layout: default
+---
+{% assign eserc = site.esercitazioni | sort: 'number' %}
+{% assign colab = "https://colab.research.google.com/github/vincnardelli/msd/blob/main" %}
+
+<div class="modulo modulo--pe">
+  <div class="modulo__head">
+    <div class="modulo__kicker">
+      <span class="tag tag--sezione tag--pe">Esercitazione</span>
+      <span class="tag tag--lang">Python</span>
+    </div>
+    <h1 class="modulo__title"><span class="modulo__num">E{{ page.number }}</span> {{ page.title }}</h1>
+    <p class="modulo__idea">{{ page.idea }}</p>
+
+    <div class="slide-dl">
+      <a class="slide-dl__box" href="{{ site.baseurl }}/{{ page.slides_pdf }}" download>
+        <span class="slide-dl__icon" aria-hidden="true">PDF</span>
+        <span class="slide-dl__txt"><span class="slide-dl__t">Slide</span><span class="slide-dl__d">{{ page.slides_descr | default: page.title }}</span></span>
+        <span class="slide-dl__btn">Scarica ↓</span>
+      </a>
+    </div>
+  </div>
+
+  {% if page.notebook.size > 0 %}
+  <section id="notebook">
+    <h2>Notebook</h2>
+    <p class="muted">Si aprono in Google Colab con un clic (vedi le <a href="{{ site.baseurl }}/guide/">guide</a>).</p>
+    <div class="slide-dl slide-dl--codice slide-dl--nb">
+      {% for nb in page.notebook %}
+        {% assign path = "esercitazioni/" | append: page.number | append: "/" | append: nb.file | append: ".ipynb" %}
+        <div class="slide-dl__box">
+          <span class="slide-dl__icon slide-dl__icon--nb" aria-hidden="true">IPYNB</span>
+          <span class="slide-dl__txt"><span class="slide-dl__t">{{ nb.titolo }}</span>{% if nb.descr %}<span class="slide-dl__d">{{ nb.descr }}</span>{% endif %}</span>
+          <span class="slide-dl__azioni">
+            {% if nb.dataset %}{% assign nds = site.dataset | where: 'slug', nb.dataset | first %}{% if nds %}<a href="{{ site.baseurl }}{{ nds.url }}">Dati: {{ nds.file }} →</a>{% endif %}{% endif %}
+            <a href="{{ colab }}/{{ path }}" target="_blank" rel="noopener">Apri in Colab ↗</a>
+            <a href="{{ site.baseurl }}/{{ path }}" download>Scarica ↓</a>
+          </span>
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  {% if page.dati.size > 0 %}
+  <section id="dati">
+    <h2>Dati</h2>
+    <p class="muted">Nel notebook i dati si leggono direttamente dal sito. Ogni dataset ha la sua pagina con anteprima, descrizione e codice.</p>
+    <div class="slide-dl slide-dl--codice slide-dl--nb">
+      {% for d in page.dati %}
+      {% assign ds = site.dataset | where: 'file', d.file | first %}
+      <div class="slide-dl__box">
+        <span class="slide-dl__icon slide-dl__icon--csv" aria-hidden="true">CSV</span>
+        <span class="slide-dl__txt"><span class="slide-dl__t">{% if ds %}{{ ds.title }}{% else %}{{ d.file }}{% endif %}</span><span class="slide-dl__d">{% if d.descr %}{{ d.descr }}{% elsif ds %}{{ ds.idea }}{% endif %}</span></span>
+        <span class="slide-dl__azioni">
+          {% if ds %}<a href="{{ site.baseurl }}{{ ds.url }}">Scheda del dataset →</a>{% endif %}
+          <a href="{{ site.baseurl }}/dati/{{ d.file }}" download>Scarica ↓</a>
+        </span>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  {% assign testo = content | strip_html | strip %}
+  {% if testo.size > 0 %}
+  <section id="lezione" class="modulo__lezione">
+    <h2>L'esercitazione</h2>
+    {{ content }}
+  </section>
+  {% endif %}
+
+  <div class="modulo__nav">
+    {% for e in eserc %}
+      {% assign pn = page.number | minus: 1 %}{% assign nn = page.number | plus: 1 %}
+      {% if e.number == pn %}<a class="btn btn-outline" href="{{ site.baseurl }}{{ e.url }}">← E{{ e.number }} · {{ e.title }}</a>{% endif %}
+      {% if e.number == nn %}<a class="btn btn-outline modulo__next" href="{{ site.baseurl }}{{ e.url }}">E{{ e.number }} · {{ e.title }} →</a>{% endif %}
+    {% endfor %}
+    <a class="btn btn-outline modulo__next" href="{{ site.baseurl }}/corso/">Tutto il corso →</a>
+  </div>
+</div>

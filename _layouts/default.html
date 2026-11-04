@@ -45,7 +45,7 @@ layout: table_wrappers
             {%- if node.url == "/" or node.url == "/index.html" -%}{%- continue -%}{%- endif -%}
             {%- assign active = false -%}
             {%- if page.url == node.url or page.parent == node.title or page.grand_parent == node.title -%}{%- assign active = true -%}{%- endif -%}
-            {%- if page.collection == "capitoli" and node.url == "/corso/" -%}{%- assign active = true -%}{%- endif -%}
+            {%- if node.url == "/corso/" and page.collection == "capitoli" -%}{%- assign active = true -%}{%- endif -%}{%- if node.url == "/corso/" and page.collection == "esercitazioni" -%}{%- assign active = true -%}{%- endif -%}
             {%- if page.collection == "esplorazioni" and node.url == "/esplorazioni/" -%}{%- assign active = true -%}{%- endif -%}
             {%- if page.collection == "dataset" and node.url == "/dati/" -%}{%- assign active = true -%}{%- endif -%}
             <li class="topbar__item{% if node.has_children %} has-children{% endif %}{% if active %} active{% endif %}">

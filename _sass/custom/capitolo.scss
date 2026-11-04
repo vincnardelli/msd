@@ -52,3 +52,11 @@ $p4: #d97706;   // Verso l'esame
 .dataset__testo table { font-size: 14px; }
 .dataset .slide-dl { grid-template-columns: 1fr; }
 .dataset a.slide-dl__box { cursor: pointer; }
+
+// ── esercitazioni (arancione) ──
+$pe: #ea580c;
+.tag.tag--pe { border-color: $pe; color: $pe; }
+.sezione-h.sezione-h--e { border-color: $pe; }
+.modulo-row.modulo-row--pe .modulo-row__n { color: $pe; font-size: 20px; }
+.modulo--pe .modulo__num { background: $pe; }
+.tag.tag--docente { background: #fff7ed; border-color: #fed7aa; color: #9a3412; }

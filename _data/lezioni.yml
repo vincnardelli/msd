@@ -17,7 +17,7 @@
 - data: '2026-11-04'
   giorno: mercoledì
   ora: 14:00 – 17:00
-  aula: Aula 201
+  aula: Aula 203
   tipo: esercitazione
   docente: Francesca Cardile
 - n: 3
@@ -89,7 +89,7 @@
 - data: '2026-12-03'
   giorno: giovedì
   ora: 14:00 – 17:00
-  aula: Aula 201
+  aula: Aula 203
   tipo: esercitazione
   docente: Francesca Cardile
 - n: 11
@@ -107,6 +107,6 @@
 - data: '2026-12-11'
   giorno: venerdì
   ora: 14:00 – 17:00
-  aula: Aula 201
+  aula: Aula 204
   tipo: esercitazione
   docente: Niccolò Salvini

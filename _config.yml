@@ -45,6 +45,9 @@ collections:
   dataset:
     output: true
     permalink: /dataset/:name/
+  esercitazioni:
+    output: true
+    permalink: /esercitazione/:name/
 # Default layouts for each collection type
 defaults:
   - scope:
@@ -74,6 +77,12 @@ defaults:
       type: dataset
     values:
       layout: dataset
+      nav_exclude: true
+  - scope:
+      path: ''
+      type: esercitazioni
+    values:
+      layout: esercitazione
       nav_exclude: true
 
 compress_html:

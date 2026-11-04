@@ -27,3 +27,18 @@ nav_order: 2
 {% endfor %}
 
 Gli altri capitoli compaiono qui man mano che si fanno a lezione.
+
+{% assign eserc = site.esercitazioni | sort: 'number' %}
+{% if eserc.size > 0 %}
+<h2 class="sezione-h sezione-h--e">Esercitazioni</h2>
+<p class="muted">Programmazione con Python applicata a statistica e finanza aziendale, con Francesca Cardile e Niccolò Salvini.</p>
+<div class="moduli-list">
+{% for e in eserc %}
+<a class="modulo-row modulo-row--pe" href="{{ site.baseurl }}{{ e.url }}">
+  <div class="modulo-row__n">E{{ e.number }}</div>
+  <div><div class="modulo-row__t">{{ e.title }}</div><div class="modulo-row__i">{{ e.idea }}</div></div>
+  <div><span class="tag tag--lang">Python</span></div>
+</a>
+{% endfor %}
+</div>
+{% endif %}
