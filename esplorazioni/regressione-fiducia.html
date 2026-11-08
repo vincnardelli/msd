@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quanto fidarsi della retta</title>
+<style>
+  :root{--ink:#1f2937;--muted:#6b7280;--line:#e5e7eb;--soft:#f8fafc;--p1:#2563eb;--p2:#113159;--p3:#7c3aed;--red:#b91c1c;--oro:#d4930d;--ok:#059669;--g1:#d4930d;--g2:#7c3aed;--g3:#059669}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:#fff;padding:12px 14px;font-size:14px;line-height:1.45}
+  [hidden]{display:none!important}
+  .k{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700}
+  .modi{display:flex;gap:4px;border-bottom:1px solid var(--line);margin:0 0 12px}
+  .modi a{padding:8px 14px;font-weight:600;cursor:pointer;border-bottom:3px solid transparent;color:var(--ink)}
+  .modi a:hover{border-color:var(--line)}
+  .modi a.on{border-color:var(--p2);color:var(--p2)}
+  .fs{margin-left:auto;align-self:center;font:inherit;font-size:12.5px;font-weight:600;border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:999px;padding:5px 11px;cursor:pointer}
+  .row{display:flex;gap:8px 16px;align-items:center;flex-wrap:wrap;margin:0 0 10px}
+  .pills{display:flex;gap:6px;flex-wrap:wrap}
+  .pills button,.btn{font:inherit;font-size:12.5px;font-weight:600;line-height:1;border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:999px;padding:6px 11px;cursor:pointer}
+  .pills button.on{border-color:var(--p2);background:var(--p2);color:#fff}
+  .btn:hover,.pills button:hover{border-color:var(--ink)}
+  .btn.pri{background:var(--p2);border-color:var(--p2);color:#fff}
+  .btn:disabled{opacity:.4;cursor:default}
+  label.ck{display:inline-flex;gap:6px;align-items:center;font-size:13px;cursor:pointer;user-select:none}
+  input[type=range]{width:150px}
+  .main{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:16px;align-items:start}
+  @media (max-width:840px){.main{grid-template-columns:1fr}}
+  .chart{position:relative}
+  svg{width:100%;height:auto;display:block;overflow:visible}
+  .tick{font-size:11px;fill:var(--muted)}
+  .axt{font-size:12px;fill:var(--ink);font-weight:600}
+  .ttl{font-size:12.5px;fill:var(--p2);font-weight:700}
+  .side{display:flex;flex-direction:column;gap:10px}
+  .card{border:1px solid var(--line);border-radius:10px;padding:10px 14px;background:#fff}
+  .card.soft{background:var(--soft)}
+  .big{font-size:22px;font-weight:800;color:var(--p2);line-height:1.15}
+  .mini{font-size:12px;color:var(--muted)}
+  table{border-collapse:collapse;width:100%;font-size:13px}
+  td,th{padding:4px 4px;border-bottom:1px solid var(--line);text-align:right}
+  td:first-child,th:first-child{text-align:left}
+  th{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+  .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:-1px}
+  .si{color:var(--ok);font-weight:700}.no{color:var(--red);font-weight:700}
+  .casi{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:0 0 12px}
+  @media (max-width:640px){.casi{grid-template-columns:1fr}}
+  .caso{border:1px solid var(--line);border-left:5px solid var(--p1);border-radius:10px;padding:8px 11px;background:#fff;cursor:pointer;text-align:left;font:inherit;color:var(--ink)}
+  .caso.ku{border-left-color:var(--p3)}
+  .caso:hover{box-shadow:0 4px 14px rgba(0,0,0,.08)}
+  .caso.on{background:var(--soft);border-color:var(--p2);border-left-color:var(--p2)}
+  .caso .t{font-weight:700;margin-top:2px}
+  .domanda{font-weight:600;margin:0 0 8px}
+  .passo{min-height:90px}
+  .nav{display:flex;gap:8px;align-items:center;margin-top:8px}
+  .nav .mini{margin-left:auto}
+  .ris{border:1px solid #a7f3d0;background:#ecfdf5;border-radius:10px;padding:10px 14px}
+  html:fullscreen body{height:100vh;overflow:auto;padding:16px 28px;font-size:15px}
+  html:fullscreen .main{grid-template-columns:minmax(0,1fr) 370px}
+</style></head>
+<body>
+<div class="modi"><a id="m-esplora" class="on">Esplora</a><a id="m-casi">Domande di business</a><button class="fs" id="fs" hidden>⛶ Schermo intero</button></div>
+<div id="casi" hidden><div class="casi" id="casi-list"></div></div>
+
+<div class="row">
+  <div class="pills" id="viste"><button data-v="campioni" class="on">Altri campioni</button><button data-v="parita">A parità degli altri</button></div>
+</div>
+<div class="row" id="ctrl-campioni">
+  <label class="ck">Mercati per campione <input type="range" id="n" min="10" max="200" step="10" value="50"> <b id="n-v">50</b></label>
+  <button class="btn pri" id="b-uno">Nuovo campione</button>
+  <button class="btn" id="b-cento">+ 100 campioni</button>
+  <button class="btn" id="b-zero">Azzera</button>
+</div>
+<div class="row" id="ctrl-parita" hidden>
+  <div class="pills" id="pv"><button data-p="vendite" class="on">Vendite e giornali</button><button data-p="radio">Radio e giornali</button></div>
+  <label class="ck"><input type="checkbox" id="c-sep"> separa i mercati per budget radio</label>
+</div>
+
+<div class="main">
+  <div class="chart"><svg id="svg" viewBox="0 0 760 430"></svg></div>
+  <div class="side">
+    <div id="pan-campioni" class="side">
+      <div class="card">
+        <div class="k">L'ultimo campione</div>
+        <div id="ultimo" class="mini">Premi «Nuovo campione».</div>
+      </div>
+      <div class="card soft">
+        <div class="k">Tutti i campioni</div>
+        <div id="tutti" class="mini">—</div>
+      </div>
+      <div class="card mini">Il «mondo vero» è la retta blu: vendite = <span id="vero"></span>, con errori come quelli dei dati. Ogni campione estrae a caso dei mercati e ristima la retta, come se raccogliessimo i dati un'altra volta.</div>
+    </div>
+    <div id="pan-parita" class="side" hidden>
+      <div class="card">
+        <div class="k">Quanto rendono 1.000 $ in giornali?</div>
+        <table id="tab-par"></table>
+      </div>
+      <div class="card soft mini" id="par-txt"></div>
+    </div>
+    <div id="pan-casi" hidden>
+      <div class="card">
+        <div class="domanda" id="c-dom"></div>
+        <div class="passo" id="c-txt"></div>
+        <div class="nav"><button class="btn" id="c-prev">← Indietro</button><button class="btn pri" id="c-next">Avanti →</button><span class="mini" id="c-n"></span></div>
+      </div>
+      <div class="ris" id="c-ris" hidden></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const D={"TV":[230.1,44.5,17.2,151.5,180.8,8.7,57.5,120.2,8.6,199.8,66.1,214.7,23.8,97.5,204.1,195.4,67.8,281.4,69.2,147.3,218.4,237.4,13.2,228.3,62.3,262.9,142.9,240.1,248.8,70.6,292.9,112.9,97.2,265.6,95.7,290.7,266.9,74.7,43.1,228.0,202.5,177.0,293.6,206.9,25.1,175.1,89.7,239.9,227.2,66.9,199.8,100.4,216.4,182.6,262.7,198.9,7.3,136.2,210.8,210.7,53.5,261.3,239.3,102.7,131.1,69.0,31.5,139.3,237.4,216.8,199.1,109.8,26.8,129.4,213.4,16.9,27.5,120.5,5.4,116.0,76.4,239.8,75.3,68.4,213.5,193.2,76.3,110.7,88.3,109.8,134.3,28.6,217.7,250.9,107.4,163.3,197.6,184.9,289.7,135.2,222.4,296.4,280.2,187.9,238.2,137.9,25.0,90.4,13.1,255.4,225.8,241.7,175.7,209.6,78.2,75.1,139.2,76.4,125.7,19.4,141.3,18.8,224.0,123.1,229.5,87.2,7.8,80.2,220.3,59.6,0.7,265.2,8.4,219.8,36.9,48.3,25.6,273.7,43.0,184.9,73.4,193.7,220.5,104.6,96.2,140.3,240.1,243.2,38.0,44.7,280.7,121.0,197.6,171.3,187.8,4.1,93.9,149.8,11.7,131.7,172.5,85.7,188.4,163.5,117.2,234.5,17.9,206.8,215.4,284.3,50.0,164.5,19.6,168.4,222.4,276.9,248.4,170.2,276.7,165.6,156.6,218.5,56.2,287.6,253.8,205.0,139.5,191.1,286.0,18.7,39.5,75.5,17.2,166.8,149.7,38.2,94.2,177.0,283.6,232.1],"radio":[37.8,39.3,45.9,41.3,10.8,48.9,32.8,19.6,2.1,2.6,5.8,24.0,35.1,7.6,32.9,47.7,36.6,39.6,20.5,23.9,27.7,5.1,15.9,16.9,12.6,3.5,29.3,16.7,27.1,16.0,28.3,17.4,1.5,20.0,1.4,4.1,43.8,49.4,26.7,37.7,22.3,33.4,27.7,8.4,25.7,22.5,9.9,41.5,15.8,11.7,3.1,9.6,41.7,46.2,28.8,49.4,28.1,19.2,49.6,29.5,2.0,42.7,15.5,29.6,42.8,9.3,24.6,14.5,27.5,43.9,30.6,14.3,33.0,5.7,24.6,43.7,1.6,28.5,29.9,7.7,26.7,4.1,20.3,44.5,43.0,18.4,27.5,40.6,25.5,47.8,4.9,1.5,33.5,36.5,14.0,31.6,3.5,21.0,42.3,41.7,4.3,36.3,10.1,17.2,34.3,46.4,11.0,0.3,0.4,26.9,8.2,38.0,15.4,20.6,46.8,35.0,14.3,0.8,36.9,16.0,26.8,21.7,2.4,34.6,32.3,11.8,38.9,0.0,49.0,12.0,39.6,2.9,27.2,33.5,38.6,47.0,39.0,28.9,25.9,43.9,17.0,35.4,33.2,5.7,14.8,1.9,7.3,49.0,40.3,25.8,13.9,8.4,23.3,39.7,21.1,11.6,43.5,1.3,36.9,18.4,18.1,35.8,18.1,36.8,14.7,3.4,37.6,5.2,23.6,10.6,11.6,20.9,20.1,7.1,3.4,48.9,30.2,7.8,2.3,10.0,2.6,5.4,5.7,43.0,21.3,45.1,2.1,28.7,13.9,12.1,41.1,10.8,4.1,42.0,35.6,3.7,4.9,9.3,42.0,8.6],"newspaper":[69.2,45.1,69.3,58.5,58.4,75.0,23.5,11.6,1.0,21.2,24.2,4.0,65.9,7.2,46.0,52.9,114.0,55.8,18.3,19.1,53.4,23.5,49.6,26.2,18.3,19.5,12.6,22.9,22.9,40.8,43.2,38.6,30.0,0.3,7.4,8.5,5.0,45.7,35.1,32.0,31.6,38.7,1.8,26.4,43.3,31.5,35.7,18.5,49.9,36.8,34.6,3.6,39.6,58.7,15.9,60.0,41.4,16.6,37.7,9.3,21.4,54.7,27.3,8.4,28.9,0.9,2.2,10.2,11.0,27.2,38.7,31.7,19.3,31.3,13.1,89.4,20.7,14.2,9.4,23.1,22.3,36.9,32.5,35.6,33.8,65.7,16.0,63.2,73.4,51.4,9.3,33.0,59.0,72.3,10.9,52.9,5.9,22.0,51.2,45.9,49.8,100.9,21.4,17.9,5.3,59.0,29.7,23.2,25.6,5.5,56.5,23.2,2.4,10.7,34.5,52.7,25.6,14.8,79.2,22.3,46.2,50.4,15.6,12.4,74.2,25.9,50.6,9.2,3.2,43.1,8.7,43.0,2.1,45.1,65.6,8.5,9.3,59.7,20.5,1.7,12.9,75.6,37.9,34.4,38.9,9.0,8.7,44.3,11.9,20.6,37.0,48.7,14.2,37.7,9.5,5.7,50.5,24.3,45.2,34.6,30.7,49.3,25.6,7.4,5.4,84.8,21.6,19.4,57.6,6.4,18.4,47.4,17.0,12.8,13.1,41.8,20.3,35.2,23.7,17.6,8.3,27.4,29.7,71.8,30.0,19.6,26.6,18.2,3.7,23.4,5.8,6.0,31.6,3.6,6.0,13.8,8.1,6.4,66.2,8.7],"sales":[22.1,10.4,9.3,18.5,12.9,7.2,11.8,13.2,4.8,10.6,8.6,17.4,9.2,9.7,19.0,22.4,12.5,24.4,11.3,14.6,18.0,12.5,5.6,15.5,9.7,12.0,15.0,15.9,18.9,10.5,21.4,11.9,9.6,17.4,9.5,12.8,25.4,14.7,10.1,21.5,16.6,17.1,20.7,12.9,8.5,14.9,10.6,23.2,14.8,9.7,11.4,10.7,22.6,21.2,20.2,23.7,5.5,13.2,23.8,18.4,8.1,24.2,15.7,14.0,18.0,9.3,9.5,13.4,18.9,22.3,18.3,12.4,8.8,11.0,17.0,8.7,6.9,14.2,5.3,11.0,11.8,12.3,11.3,13.6,21.7,15.2,12.0,16.0,12.9,16.7,11.2,7.3,19.4,22.2,11.5,16.9,11.7,15.5,25.4,17.2,11.7,23.8,14.8,14.7,20.7,19.2,7.2,8.7,5.3,19.8,13.4,21.8,14.1,15.9,14.6,12.6,12.2,9.4,15.9,6.6,15.5,7.0,11.6,15.2,19.7,10.6,6.6,8.8,24.7,9.7,1.6,12.7,5.7,19.6,10.8,11.6,9.5,20.8,9.6,20.7,10.9,19.2,20.1,10.4,11.4,10.3,13.2,25.4,10.9,10.1,16.1,11.6,16.6,19.0,15.6,3.2,15.3,10.1,7.3,12.9,14.4,13.3,14.9,18.0,11.9,11.9,8.0,12.2,17.1,15.0,8.4,14.5,7.6,11.7,11.5,27.0,20.2,11.7,11.8,12.6,10.5,12.2,8.7,26.2,17.6,22.6,10.3,17.3,15.9,6.7,10.8,9.9,5.9,19.6,17.3,7.6,9.7,12.8,25.5,13.4]};
+const N=D.sales.length;
+const $=id=>document.getElementById(id);
+const num=(x,d=0)=>{const s=Math.abs(x).toFixed(d).split('.');s[0]=s[0].replace(/\B(?=(\d{3})+(?!\d))/g,'.');return(x<0&&+Math.abs(x).toFixed(d)!==0?'−':'')+s.join(',');};
+const mean=a=>a.reduce((s,v)=>s+v,0)/a.length;
+const sd=a=>{const m=mean(a);return Math.sqrt(a.reduce((s,v)=>s+(v-m)**2,0)/(a.length-1));};
+
+// ── statistica: OLS semplice, OLS multipla, distribuzione t ──
+function ols1(x,y){const n=x.length,xb=mean(x),yb=mean(y);let sxy=0,sxx=0;for(let i=0;i<n;i++){sxy+=(x[i]-xb)*(y[i]-yb);sxx+=(x[i]-xb)**2;}
+  const b=sxy/sxx,a=yb-b*xb;let rss=0;for(let i=0;i<n;i++)rss+=(y[i]-a-b*x[i])**2;const s2=rss/(n-2);return{a,b,se:Math.sqrt(s2/sxx),n};}
+function olsM(cols,y){ // equazioni normali con intercetta
+  const n=y.length,p=cols.length+1,X=y.map((_,i)=>[1,...cols.map(c=>c[i])]);
+  const A=Array.from({length:p},(_,r)=>Array.from({length:p},(_,c)=>X.reduce((s,row)=>s+row[r]*row[c],0)));
+  const v=Array.from({length:p},(_,r)=>X.reduce((s,row,i)=>s+row[r]*y[i],0));
+  for(let c=0;c<p;c++){let m=c;for(let r=c+1;r<p;r++)if(Math.abs(A[r][c])>Math.abs(A[m][c]))m=r;[A[c],A[m]]=[A[m],A[c]];[v[c],v[m]]=[v[m],v[c]];
+    for(let r=0;r<p;r++)if(r!==c){const f=A[r][c]/A[c][c];for(let k=c;k<p;k++)A[r][k]-=f*A[c][k];v[r]-=f*v[c];}}
+  return v.map((x,i)=>x/A[i][i]);}
+function lgam(x){const g=7,c=[0.99999999999980993,676.5203681218851,-1259.1392167224028,771.32342877765313,-176.61502916214059,12.507343278686905,-0.13857109526572012,9.9843695780195716e-6,1.5056327351493116e-7];
+  if(x<0.5)return Math.log(Math.PI/Math.sin(Math.PI*x))-lgam(1-x);x-=1;let a=c[0];const t=x+g+0.5;for(let i=1;i<g+2;i++)a+=c[i]/(x+i);return 0.5*Math.log(2*Math.PI)+(x+0.5)*Math.log(t)-t+Math.log(a);}
+function betacf(a,b,x){let qab=a+b,qap=a+1,qam=a-1,c=1,d=1-qab*x/qap;d=1/(Math.abs(d)<1e-30?1e-30:d);let h=d;
+  for(let m=1;m<=200;m++){const m2=2*m;let aa=m*(b-m)*x/((qam+m2)*(a+m2));d=1+aa*d;d=1/(Math.abs(d)<1e-30?1e-30:d);c=1+aa/c;c=Math.abs(c)<1e-30?1e-30:c;h*=d*c;
+    aa=-(a+m)*(qab+m)*x/((a+m2)*(qap+m2));d=1+aa*d;d=1/(Math.abs(d)<1e-30?1e-30:d);c=1+aa/c;c=Math.abs(c)<1e-30?1e-30:c;const del=d*c;h*=del;if(Math.abs(del-1)<3e-12)break;}return h;}
+function ibeta(x,a,b){if(x<=0)return 0;if(x>=1)return 1;const bt=Math.exp(lgam(a+b)-lgam(a)-lgam(b)+a*Math.log(x)+b*Math.log(1-x));
+  return x<(a+1)/(a+b+2)?bt*betacf(a,b,x)/a:1-bt*betacf(b,a,1-x)/b;}
+const pval=(t,df)=>ibeta(df/(df+t*t),df/2,0.5); // bilaterale
+function tq(df){let lo=1,hi=20;for(let i=0;i<60;i++){const m=(lo+hi)/2;pval(m,df)>0.05?lo=m:hi=m;}return(lo+hi)/2;}
+const fmtP=p=>p<0.0001?'< 0,0001':num(p,4);
+
+// ── il mondo vero: la retta stimata su tutti i 200 mercati ──
+const VERO=ols1(D.TV,D.sales);
+const SIG=(()=>{let r=0;for(let i=0;i<N;i++)r+=(D.sales[i]-VERO.a-VERO.b*D.TV[i])**2;return Math.sqrt(r/(N-2));})();
+let seed=1;const rnd=()=>{seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};
+const gauss=()=>{let u=0,v=0;while(!u)u=rnd();while(!v)v=rnd();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);};
+const C={n:50,campioni:[],ultimo:null};
+function campione(){const n=C.n,x=[],y=[];for(let i=0;i<n;i++){const xi=D.TV[Math.floor(rnd()*N)];x.push(xi);y.push(VERO.a+VERO.b*xi+SIG*gauss());}
+  const f=ols1(x,y),q=tq(n-2);f.lo=f.b-q*f.se;f.hi=f.b+q*f.se;f.t=f.b/f.se;f.p=pval(f.t,n-2);f.dentro=f.lo<=VERO.b&&VERO.b<=f.hi;f.x=x;f.y=y;
+  C.campioni.push(f);C.ultimo=f;}
+const SEteo=n=>SIG/(sd(D.TV)*Math.sqrt(n-1));
+
+// ── grafici ──
+const svg=$('svg');
+const el=(t,a,p)=>{const e=document.createElementNS('http://www.w3.org/2000/svg',t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;};
+const txt=(x,y,s,a={},p=svg)=>{const e=el('text',{x,y,...a},p);e.textContent=s;return e;};
+function assi(box,xd,yd,xl,yl,xstep,ystep,fx=v=>num(v)){const{x0,x1,y0,y1}=box;
+  const sx=v=>x0+(v-xd[0])/(xd[1]-xd[0])*(x1-x0),sy=v=>y1-(v-yd[0])/(yd[1]-yd[0])*(y1-y0);
+  for(let v=yd[0];v<=yd[1]+1e-9;v+=ystep){el('line',{x1:x0,x2:x1,y1:sy(v),y2:sy(v),stroke:'#f1f1f1'},svg);txt(x0-6,sy(v)+4,num(v),{'text-anchor':'end',class:'tick'});}
+  for(let v=xd[0];v<=xd[1]+1e-9;v+=xstep)txt(sx(v),y1+16,fx(v),{'text-anchor':'middle',class:'tick'});
+  el('line',{x1:x0,x2:x1,y1:y1,y2:y1,stroke:'#999'},svg);el('line',{x1:x0,x2:x0,y1:y0,y2:y1,stroke:'#999'},svg);
+  if(xl)txt((x0+x1)/2,y1+34,xl,{'text-anchor':'middle',class:'axt'});
+  if(yl)txt(x0-34,(y0+y1)/2,yl,{'text-anchor':'middle',class:'axt',transform:`rotate(-90 ${x0-34} ${(y0+y1)/2})`});
+  return{sx,sy};}
+
+function drawCampioni(){svg.innerHTML='';
+  // a sinistra: il campione e le rette
+  const {sx,sy}=assi({x0:50,x1:390,y0:28,y1:380},[0,300],[0,30],'Budget TV (migliaia di $)','Vendite (migliaia di unità)',50,5);
+  txt(50,16,C.ultimo?`Campione ${C.campioni.length}: ${C.n} mercati`:'Il mondo vero',{class:'ttl'});
+  C.campioni.slice(-40).forEach(f=>el('line',{x1:sx(0),y1:sy(f.a),x2:sx(300),y2:sy(f.a+f.b*300),stroke:'#9ca3af','stroke-width':1,opacity:.45},svg));
+  if(C.ultimo){const f=C.ultimo;f.x.forEach((x,i)=>el('circle',{cx:sx(x),cy:sy(Math.max(0,Math.min(30,f.y[i]))),r:3.4,fill:'#8a8f98',stroke:'#fff','stroke-width':.6},svg));
+    el('line',{x1:sx(0),y1:sy(f.a),x2:sx(300),y2:sy(f.a+f.b*300),stroke:'var(--oro)','stroke-width':3},svg);}
+  el('line',{x1:sx(0),y1:sy(VERO.a),x2:sx(300),y2:sy(VERO.a+VERO.b*300),stroke:'var(--p2)','stroke-width':2.5},svg);
+  // a destra in alto: istogramma delle pendenze
+  const se=SEteo(C.n),xd=[VERO.b-4.2*se,VERO.b+4.2*se];
+  const x0=440,x1=750,hy0=28,hy1=200;
+  const hx=v=>x0+(v-xd[0])/(xd[1]-xd[0])*(x1-x0);
+  txt(x0,16,'Le pendenze stimate, campione dopo campione',{class:'ttl'});
+  const nb=30,w=(xd[1]-xd[0])/nb,cnt=Array(nb).fill(0);C.campioni.forEach(f=>{const k=Math.floor((f.b-xd[0])/w);if(k>=0&&k<nb)cnt[k]++;});
+  const mx=Math.max(4,...cnt);
+  cnt.forEach((c,k)=>{if(c)el('rect',{x:hx(xd[0]+k*w)+.5,y:hy1-c/mx*(hy1-hy0),width:hx(xd[0]+w)-hx(xd[0])-1,height:c/mx*(hy1-hy0),fill:'#e0e8f2',stroke:'var(--p2)','stroke-width':.8},svg);});
+  el('line',{x1:x0,x2:x1,y1:hy1,y2:hy1,stroke:'#999'},svg);
+  el('line',{x1:hx(VERO.b),x2:hx(VERO.b),y1:hy0,y2:hy1+4,stroke:'var(--p2)','stroke-width':2},svg);
+  [-2,0,2].forEach(k=>txt(hx(VERO.b+k*se),hy1+15,num((VERO.b+k*se)*1000,1),{'text-anchor':'middle',class:'tick'}));
+  txt((x0+x1)/2,hy1+30,'unità vendute in più per 1.000 $ di TV',{'text-anchor':'middle',class:'tick'});
+  // a destra in basso: gli ultimi 20 intervalli di confidenza
+  const iy0=262,iy1=425;txt(x0,iy0-8,'Gli ultimi 20 intervalli di confidenza al 95%',{class:'ttl'});
+  el('line',{x1:hx(VERO.b),x2:hx(VERO.b),y1:iy0,y2:iy1,stroke:'var(--p2)','stroke-width':1.5,'stroke-dasharray':'4 3'},svg);
+  const ult=C.campioni.slice(-20),dy=(iy1-iy0)/20;
+  ult.forEach((f,i)=>{const y=iy0+dy*(i+.5),c=f.dentro?'var(--ok)':'var(--red)',a=Math.max(x0,hx(f.lo)),b=Math.min(x1,hx(f.hi));
+    el('line',{x1:a,x2:b,y1:y,y2:y,stroke:c,'stroke-width':2.5},svg);el('circle',{cx:Math.max(x0,Math.min(x1,hx(f.b))),cy:y,r:3,fill:c},svg);});
+  pannelloCampioni();}
+
+function pannelloCampioni(){
+  $('vero').textContent=`${num(VERO.a,2)} + ${num(VERO.b,4)} × TV`;
+  const f=C.ultimo;
+  $('ultimo').innerHTML=f?`<div class="big">+${num(f.b*1000,1)} unità</div>per 1.000 $ di TV (il vero: ${num(VERO.b*1000,1)})<br>
+    errore standard <b>${num(f.se*1000,1)}</b> · intervallo <b>[${num(f.lo*1000,1)} ; ${num(f.hi*1000,1)}]</b><br>
+    t = ${num(f.t,1)} · p-value ${fmtP(f.p)}<br>
+    ${f.dentro?'<span class="si">L\'intervallo contiene il valore vero.</span>':'<span class="no">L\'intervallo manca il valore vero.</span>'}`:'Premi «Nuovo campione».';
+  const n=C.campioni.length;
+  if(n<2){$('tutti').innerHTML=n?'Un solo campione: servono più campioni per vedere quanto cambia la stima.':'—';return;}
+  const bs=C.campioni.map(f=>f.b),dentro=C.campioni.filter(f=>f.dentro).length;
+  $('tutti').innerHTML=`<b>${num(n)}</b> campioni da ${C.n} mercati<br>deviazione standard delle pendenze: <b>${num(sd(bs)*1000,1)}</b><br>errore standard medio dalla formula: <b>${num(mean(C.campioni.map(f=>f.se))*1000,1)}</b><br>
+    intervalli che contengono il vero: <b>${num(dentro)} su ${num(n)}</b> (${num(100*dentro/n,0)}%)`;}
+
+// ── a parità degli altri ──
+const P={vista:'vendite',sep:false};
+const qs=[...D.radio].sort((a,b)=>a-b),T1=qs[Math.floor(N/3)],T2=qs[Math.floor(2*N/3)];
+const gruppo=i=>D.radio[i]<T1?0:D.radio[i]<T2?1:2;
+const GR=[{lab:'radio bassa',col:'var(--g1)'},{lab:'radio media',col:'var(--g2)'},{lab:'radio alta',col:'var(--g3)'}];
+const SOLO=ols1(D.newspaper,D.sales),MULTI=olsM([D.TV,D.radio,D.newspaper],D.sales);
+const IN=GR.map((g,k)=>{const ix=[...Array(N).keys()].filter(i=>gruppo(i)===k);return{...ols1(ix.map(i=>D.newspaper[i]),ix.map(i=>D.sales[i])),n:ix.length,ix,
+  rmin:Math.min(...ix.map(i=>D.radio[i])),rmax:Math.max(...ix.map(i=>D.radio[i]))};});
+const corrNR=(()=>{const a=D.newspaper,b=D.radio,ma=mean(a),mb=mean(b);let s=0,sa=0,sb=0;for(let i=0;i<N;i++){s+=(a[i]-ma)*(b[i]-mb);sa+=(a[i]-ma)**2;sb+=(b[i]-mb)**2;}return s/Math.sqrt(sa*sb);})();
+function drawParita(){svg.innerHTML='';
+  const vend=P.vista==='vendite',yv=vend?D.sales:D.radio,yd=vend?[0,30]:[0,50];
+  const {sx,sy}=assi({x0:60,x1:740,y0:28,y1:380},[0,120],yd,'Budget giornali (migliaia di $)',vend?'Vendite (migliaia di unità)':'Budget radio (migliaia di $)',20,vend?5:10);
+  txt(60,16,vend?(P.sep?'Vendite e giornali, a parità di radio':'Vendite e giornali, tutti i mercati insieme'):`Radio e giornali: correlazione ${num(corrNR,2)}`,{class:'ttl'});
+  for(let i=0;i<N;i++)el('circle',{cx:sx(D.newspaper[i]),cy:sy(yv[i]),r:3.8,fill:P.sep?GR[gruppo(i)].col:'#8a8f98',stroke:'#fff','stroke-width':.6,opacity:.9},svg);
+  const linea=(f,col,w,dash,x0=0,x1=115)=>el('line',{x1:sx(x0),y1:sy(f.a+f.b*x0),x2:sx(x1),y2:sy(f.a+f.b*x1),stroke:col,'stroke-width':w,'stroke-dasharray':dash||''},svg);
+  if(vend){linea(SOLO,'var(--p2)',P.sep?1.8:3,P.sep?'6 4':'');
+    if(P.sep)IN.forEach((f,k)=>{const xs=f.ix.map(i=>D.newspaper[i]);linea(f,GR[k].col,3,'',Math.min(...xs),Math.max(...xs));});}
+  else{linea(ols1(D.newspaper,D.radio),'var(--p2)',2.5);}
+  if(P.sep){GR.forEach((g,k)=>{el('circle',{cx:560,cy:44+k*18,r:5,fill:g.col},svg);txt(570,48+k*18,`${g.lab} (${num(IN[k].rmin,0)}–${num(IN[k].rmax,0)} mila $)`,{class:'tick'});});}
+  pannelloParita();}
+function pannelloParita(){
+  let h=`<tr><th>Modello</th><th>unità</th><th>p-value</th></tr>
+    <tr><td>Giornali da soli</td><td><b>${num(SOLO.b*1000,1)}</b></td><td>${fmtP(pval(SOLO.b/SOLO.se,N-2))}</td></tr>`;
+  if(P.sep)IN.forEach((f,k)=>h+=`<tr><td><span class="dot" style="background:${GR[k].col}"></span>${GR[k].lab}</td><td>${num(f.b*1000,1)}</td><td>${num(pval(f.b/f.se,f.n-2),2)}</td></tr>`);
+  h+=`<tr><td>Con TV e radio<br><span class="mini">regressione multipla</span></td><td><b>${num(MULTI[3]*1000,1)}</b></td><td>0,86</td></tr>`;
+  $('tab-par').innerHTML=h;
+  $('par-txt').innerHTML=P.vista==='radio'?`I mercati che spendono di più in giornali spendono di più anche in radio. La radio fa vendere: da soli, i giornali si prendono il suo merito.`
+    :P.sep?`Dentro ogni gruppo di mercati con budget radio simile, la retta dei giornali è quasi piatta. È quello che fa la regressione multipla: confronta mercati con la stessa radio (e la stessa TV).`
+    :`Da soli, mille dollari in giornali si associano a ${num(SOLO.b*1000,0)} unità vendute in più, con un p-value bassissimo. Prova a separare i mercati per budget radio.`;}
+
+// ── comandi ──
+let vista='campioni';
+function setVista(v){vista=v;[...$('viste').children].forEach(b=>b.classList.toggle('on',b.dataset.v===v));
+  $('ctrl-campioni').hidden=v!=='campioni';$('ctrl-parita').hidden=v!=='parita';
+  const casi=!$('pan-casi').hidden;$('pan-campioni').hidden=casi||v!=='campioni';$('pan-parita').hidden=casi||v!=='parita';draw();}
+const draw=()=>vista==='campioni'?drawCampioni():drawParita();
+[...$('viste').children].forEach(b=>b.onclick=()=>setVista(b.dataset.v));
+[...$('pv').children].forEach(b=>b.onclick=()=>{P.vista=b.dataset.p;[...$('pv').children].forEach(x=>x.classList.toggle('on',x===b));drawParita();});
+$('c-sep').onchange=e=>{P.sep=e.target.checked;drawParita();};
+function setN(n){C.n=n;$('n').value=n;$('n-v').textContent=n;C.campioni=[];C.ultimo=null;}
+$('n').oninput=e=>{setN(+e.target.value);drawCampioni();};
+$('b-uno').onclick=()=>{campione();drawCampioni();};
+$('b-cento').onclick=()=>{for(let i=0;i<100;i++)campione();drawCampioni();};
+$('b-zero').onclick=()=>{setN(C.n);drawCampioni();};
+
+// ── domande di business ──
+const CASI=[
+{tag:'Errore standard',cl:'sk',t:'Quanto è sicuro il +47,5?',q:'Il direttore marketing ha letto «47,5 unità per 1.000 $ di TV». Se raccogliessimo i dati di altri 200 mercati, uscirebbe lo stesso numero?',
+ passi:[
+  {fai:()=>{setVista('campioni');seed=7;setN(200);campione();},txt:()=>{const f=C.ultimo;return`Un nuovo campione di 200 mercati, generato dal «mondo vero» (la retta blu). La sua retta, in arancione, dà <b>${num(f.b*1000,1)}</b> unità per 1.000 $, non 47,5. Il suo intervallo di confidenza va da ${num(f.lo*1000,1)} a ${num(f.hi*1000,1)}.`;}},
+  {fai:()=>{for(let i=0;i<99;i++)campione();},txt:()=>{const bs=C.campioni.map(f=>f.b);return`Cento campioni, cento pendenze. L'istogramma è centrato sul valore vero e largo circa ±2 errori standard: la deviazione standard delle pendenze è <b>${num(sd(bs)*1000,1)}</b>, l'errore standard che Python calcola da un solo campione è <b>${num(mean(C.campioni.map(f=>f.se))*1000,1)}</b>.`;}},
+  {fai:()=>{},txt:()=>{const d=C.campioni.filter(f=>f.dentro).length;return`Guarda gli intervalli in basso: verdi se contengono il valore vero, rossi se lo mancano. Su ${C.campioni.length} campioni, <b>${d}</b> intervalli contengono il vero.`;},
+   ris:()=>{const d=C.campioni.filter(f=>f.dentro).length;return`Con un altro campione il numero cambierebbe, di solito di meno di ${num(2*VERO.se*1000,0)} unità in più o in meno: è quello che misura l'<b>errore standard</b>. L'intervallo di confidenza al 95% è costruito perché lo catturi 95 volte su 100; qui ${d} su ${C.campioni.length}. Non sappiamo se il nostro intervallo è uno dei verdi o dei rossi: sappiamo quanto spesso il metodo funziona.`;}}]},
+{tag:'Quanti dati servono',cl:'sk',t:'E se avessimo solo 20 mercati?',q:'Un concorrente ha dati su soli 20 mercati. Quanto può fidarsi della sua stima?',
+ passi:[
+  {fai:()=>{setVista('campioni');seed=11;setN(200);for(let i=0;i<100;i++)campione();},txt:()=>`Cento campioni da <b>200 mercati</b>: le rette grigie sono quasi sovrapposte, l'istogramma è stretto. Deviazione standard delle pendenze: ${num(sd(C.campioni.map(f=>f.b))*1000,1)} unità.`},
+  {fai:()=>{seed=12;setN(20);for(let i=0;i<100;i++)campione();},txt:()=>{const bs=C.campioni.map(f=>f.b),ns=C.campioni.filter(f=>f.p>0.05).length;return`Cento campioni da <b>20 mercati</b>: le rette si aprono a ventaglio. Deviazione standard delle pendenze: <b>${num(sd(bs)*1000,1)}</b> unità. `+(ns?`In ${ns} campioni su 100 la TV non risulta nemmeno significativa (p-value sopra 0,05).`:`La TV risulta comunque significativa in tutti i campioni: il segno della relazione si vede anche con pochi dati, la sua misura no.`);}},
+  {fai:()=>{},txt:()=>`Nota che l'asse dell'istogramma è cambiato: con meno dati la stima si sparpaglia su un intervallo molto più largo, anche se il mondo vero è lo stesso.`,
+   ris:()=>`L'errore standard scende con la radice del numero di dati: dieci volte meno mercati, intervallo circa <b>${num(Math.sqrt(10),1)} volte più largo</b>. Con 20 mercati il concorrente può dire che la TV aiuta, ma non quanto: la sua stima potrebbe sbagliare di ${num(2*sd(C.campioni.map(f=>f.b))*1000,0)} unità per 1.000 $ in più o in meno. Prima di decidere un budget, chiedersi su quanti dati si basa il numero.`}]},
+{tag:'A parità degli altri',cl:'ku',t:'Tagliamo il budget dei giornali?',q:'Da soli, i giornali sembrano funzionare. Nel modello con TV e radio il loro effetto sparisce. Quale numero crediamo?',
+ passi:[
+  {fai:()=>{setVista('parita');P.vista='vendite';P.sep=false;},txt:()=>`Tutti i 200 mercati insieme: la retta sale, ${num(SOLO.b*1000,0)} unità per 1.000 $ di giornali, p-value ${fmtP(pval(SOLO.b/SOLO.se,N-2))}. Sembra un buon investimento.`},
+  {fai:()=>{P.vista='radio';P.sep=false;},txt:()=>`Ma chi spende in giornali spende anche in radio: la correlazione tra i due budget è ${num(corrNR,2)}. E la radio fa vendere.`},
+  {fai:()=>{P.vista='vendite';P.sep=true;},txt:()=>`Separiamo i mercati in tre gruppi con budget radio simile. Dentro ogni gruppo la retta dei giornali è quasi piatta: ${IN.map(f=>num(f.b*1000,0)).join(', ')} unità, nessuna significativa.`,
+   ris:()=>`I giornali non fanno vendere: sono un segnale della radio che viaggia con loro. La regressione multipla fa lo stesso confronto «a parità di radio e TV» e stima <b>${num(MULTI[3]*1000,1)}</b> unità per 1.000 $. Tagliare i giornali non dovrebbe costare vendite; la regressione semplice avrebbe suggerito il contrario.`}]}
+];
+let caso=0,passo=0;
+function mostraCaso(){const K=CASI[caso];[...$('casi-list').children].forEach((b,i)=>b.classList.toggle('on',i===caso));
+  $('c-dom').textContent=K.q;K.passi[passo].fai();$('c-sep').checked=P.sep;[...$('pv').children].forEach(x=>x.classList.toggle('on',x.dataset.p===P.vista));draw();
+  const Pp=K.passi[passo];$('c-txt').innerHTML=Pp.txt();$('c-ris').hidden=!Pp.ris;if(Pp.ris)$('c-ris').innerHTML='<div class="k">Risposta</div>'+Pp.ris();
+  $('c-prev').disabled=passo===0;$('c-next').disabled=passo===K.passi.length-1;$('c-n').textContent=`passo ${passo+1} di ${K.passi.length}`;}
+function apriCaso(i){caso=i;passo=0;mostraCaso();}
+CASI.forEach((K,i)=>{const b=document.createElement('button');b.className='caso '+K.cl;b.innerHTML=`<div class="k">${K.tag}</div><div class="t">${K.t}</div>`;b.onclick=()=>apriCaso(i);$('casi-list').appendChild(b);});
+// indietro: si riparte dall'inizio del caso e si rifanno i passi, così i numeri restano gli stessi
+$('c-prev').onclick=()=>{if(passo>0){const t=passo-1;passo=0;mostraCaso();while(passo<t){passo++;mostraCaso();}}};
+$('c-next').onclick=()=>{if(passo<CASI[caso].passi.length-1){passo++;mostraCaso();}};
+function setMode(m){const c=m==='casi';$('m-esplora').classList.toggle('on',!c);$('m-casi').classList.toggle('on',c);$('casi').hidden=!c;$('pan-casi').hidden=!c;
+  $('viste').parentElement.hidden=c;
+  if(c){$('pan-campioni').hidden=true;$('pan-parita').hidden=true;apriCaso(0);}else setVista(vista);}
+$('m-esplora').onclick=()=>setMode('esplora');$('m-casi').onclick=()=>setMode('casi');
+document.addEventListener('keydown',e=>{if($('pan-casi').hidden)return;if(e.key==='ArrowRight')$('c-next').click();if(e.key==='ArrowLeft')$('c-prev').click();});
+
+{const fs=$('fs'),de=document.documentElement,on=()=>document.fullscreenElement||document.webkitFullscreenElement;
+ if(de.requestFullscreen||de.webkitRequestFullscreen){fs.hidden=false;
+  fs.onclick=()=>{if(on())return (document.exitFullscreen||document.webkitExitFullscreen).call(document);const r=(de.requestFullscreen||de.webkitRequestFullscreen).call(de);if(r&&r.catch)r.catch(()=>{if(window.parent!==window)window.open(location.href,'_blank');});};
+  const lab=()=>fs.textContent=on()?'✕ Esci dallo schermo intero':'⛶ Schermo intero';document.addEventListener('fullscreenchange',lab);document.addEventListener('webkitfullscreenchange',lab);}}
+
+seed=2026;setVista('campioni');
+if(location.hash==='#casi')setMode('casi');
+if(window.parent!==window&&window.ResizeObserver)new ResizeObserver(()=>parent.postMessage({esplorazione:document.body.scrollHeight},'*')).observe(document.body);
+</script>
+</body></html>
