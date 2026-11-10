@@ -15,7 +15,8 @@ Pagine interattive, una per concetto: si gioca con un controllo e si guarda cosa
 {% endif %}
 
 <div class="espl-grid">
-{% for e in site.esplorazioni %}
+{% assign esplorazioni = site.esplorazioni | sort: "ordine" %}
+{% for e in esplorazioni %}
 <a class="espl-card" href="{{ site.baseurl }}{{ e.url }}">
   <div class="espl-card__title">{{ e.title }}</div>
   <div class="espl-card__q">{{ e.question }}</div>

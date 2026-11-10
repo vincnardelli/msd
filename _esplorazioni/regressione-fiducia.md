@@ -2,6 +2,7 @@
 title: Quanto fidarsi della retta
 slug: regressione-fiducia
 capitolo: 2
+ordine: 3
 question: Con altri dati la retta sarebbe la stessa? E cosa vuol dire «a parità degli altri»?
 ready: true
 altezza: 680

@@ -2,6 +2,7 @@
 title: Trova la retta
 slug: regressione-retta
 capitolo: 2
+ordine: 2
 question: Tra tutte le rette che passano tra i punti, quale scegliamo? E quanto spiega del perché un mercato vende più di un altro?
 ready: true
 altezza: 640

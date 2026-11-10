@@ -2,6 +2,7 @@
 title: Le misure che riassumono i dati
 slug: misure-descrittive
 capitolo: 1
+ordine: 1
 question: Cosa mostra, e cosa nasconde, ogni grafico degli stessi dati? E quando la media non basta per decidere?
 ready: true
 altezza: 1100
