@@ -60,3 +60,29 @@ $pe: #ea580c;
 .modulo-row.modulo-row--pe .modulo-row__n { color: $pe; font-size: 20px; }
 .modulo--pe .modulo__num { background: $pe; }
 .tag.tag--docente { background: #fff7ed; border-color: #fed7aa; color: #9a3412; }
+
+// Lezione speciale
+.evento { border: 1px solid $line; border-left: 6px solid $p1; border-radius: 12px; padding: 20px 24px; margin: 8px 0 28px; background: $soft; }
+.evento__k { font-size: 12px; text-transform: uppercase; letter-spacing: .1em; font-weight: 800; color: $p1; }
+.evento .evento__t { margin: 4px 0 2px; font-size: 32px; line-height: 1.15; }
+.evento__s { font-size: 18px; color: $muted; margin: 0 0 14px; font-style: italic; }
+.evento__info { display: grid; gap: 6px; font-size: 15px; > div { display: grid; grid-template-columns: 70px 1fr; align-items: baseline; } .k { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: $muted; font-weight: 700; } }
+.dove-siamo__sp { font-weight: 700; }
+@media (max-width: 600px) { .evento { padding: 16px; } .evento .evento__t { font-size: 26px; } }
+.evento__top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.evento__logo { height: 26px; width: auto; }
+.evento__corpo { display: grid; grid-template-columns: 1fr 220px; gap: 28px; align-items: start; @media (max-width: 700px) { grid-template-columns: 1fr; } }
+.evento__poster img { width: 100%; border: 1px solid $line; border-radius: 8px; box-shadow: 0 4px 14px rgba(0,0,0,.08); }
+.evento__poster { @media (max-width: 700px) { max-width: 240px; } }
+// Box evento in home
+.evento-home { display: flex; align-items: center; gap: 18px; border: 1px solid $line; border-left: 6px solid $p1; border-radius: 12px; padding: 14px 18px; margin: 12px 0 22px; background: $soft; color: inherit; text-decoration: none;
+  &:hover { border-color: $p1; text-decoration: none; }
+  &[hidden] { display: none; }
+  .evento-home__txt { flex: 1 1 auto; display: flex; flex-direction: column; gap: 2px; }
+  .evento-home__k { font-size: 11px; text-transform: uppercase; letter-spacing: .1em; font-weight: 800; color: $p1; }
+  .evento-home__t { font-size: 20px; font-weight: 700; color: $body-heading-color; }
+  .evento-home__d { font-size: 14px; color: $muted; }
+  .evento-home__logo { height: 22px; width: auto; flex: 0 0 auto; }
+  .evento-home__btn { font-size: 13.5px; font-weight: 700; color: $p1; white-space: nowrap; }
+  @media (max-width: 600px) { flex-wrap: wrap; .evento-home__logo { order: -1; } }
+}

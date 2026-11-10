@@ -22,7 +22,7 @@ Il calendario ufficiale, con eventuali variazioni, è sulla [pagina del corso su
   <td class="muted">{{ l.n }}</td>
   {% assign mi = l.data | date: '%-m' | minus: 1 %}<td><strong>{{ l.giorno }} {{ l.data | date: '%-d' }} {{ mesi[mi] }}</strong></td>
   <td>{{ l.ora }}</td>
-  <td>{% if l.tipo == 'esercitazione' %}Esercitazione <span class="muted">· {{ l.docente }}</span>{% else %}Lezione{% endif %}</td>
+  <td>{% if l.tipo == 'esercitazione' %}Esercitazione <span class="muted">· {{ l.docente }}</span>{% elsif l.speciale %}<a href="{{ site.baseurl }}{{ l.link }}">{{ l.speciale }}</a>{% else %}Lezione{% endif %}</td>
   <td class="muted">{{ l.aula }}</td>
 </tr>
 {% endfor %}
