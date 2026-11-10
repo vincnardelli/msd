@@ -6,6 +6,21 @@ idea: "Quanto rendono mille dollari in più di pubblicità? La retta dei minimi 
 slides_pdf: slide/lezione_2.pdf
 concepts_new: [regressione lineare semplice, minimi quadrati, residui, R², errore standard dei residui, previsione ed estrapolazione, errore standard, intervallo di confidenza, test t e p-value, regressione multipla, a parità degli altri, statistica F, R² aggiustato, selezione delle variabili, variabili dummy, interazione]
 concepts_required: [covarianza, correlazione, correlazione spuria, apprendimento supervisionato]
+notebook:
+  - file: regressione_advertising
+    tipo: lezione
+    titolo: Quanto rende la pubblicità?
+    descr: I numeri e i grafici delle slide, riprodotti in Python
+    dataset: advertising
+  - file: lab_real_estate
+    tipo: lab
+    titolo: "LAB 1 · Real estate"
+    descr: Povertà del quartiere e valore delle case (lunedì)
+    dataset: boston
+dati:
+  - file: advertising.csv
+  - file: boston.csv
+dataset: [advertising, boston]
 explorations: [regressione-retta, regressione-fiducia]
 ---
 
