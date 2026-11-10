@@ -12,10 +12,15 @@ notebook:
     titolo: Quanto rende la pubblicità?
     descr: I numeri e i grafici delle slide, riprodotti in Python
     dataset: advertising
-  - file: lab_real_estate
+  - file: lab_real_estate_classe
     tipo: lab
-    titolo: "LAB 1 · Real estate"
-    descr: Povertà del quartiere e valore delle case (lunedì)
+    titolo: "LAB 1 · Real estate (classe)"
+    descr: L'inizio e le domande, da completare in aula
+    dataset: boston
+  - file: lab_real_estate_soluzione
+    tipo: lab
+    titolo: "LAB 1 · Real estate (soluzione)"
+    descr: Il codice svolto, con le risposte
     dataset: boston
 dati:
   - file: advertising.csv
