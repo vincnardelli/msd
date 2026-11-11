@@ -14,7 +14,7 @@ Per ogni cosa che vuoi fare, come si scrive in **Python** (il comando di riferim
 <div class="slide-dl">
   <a class="slide-dl__box" href="{{ site.baseurl }}/guide/dizionario.pdf" download>
     <span class="slide-dl__icon">PDF</span>
-    <span class="slide-dl__txt"><span class="slide-dl__t">Dizionario Python-R</span><span class="slide-dl__d">10 pagine, da tenere accanto al notebook</span></span>
+    <span class="slide-dl__txt"><span class="slide-dl__t">Dizionario Python-R</span><span class="slide-dl__d">11 pagine, da tenere accanto al notebook</span></span>
     <span class="slide-dl__btn">Scarica ↓</span>
   </a>
 </div>
@@ -288,3 +288,102 @@ ggplot(dataframe, aes(x = colonna1, y = colonna2, color = gruppo)) +
   labs(title = "Titolo", x = "Asse x", y = "Asse y") +
   theme_minimal()
 ```
+
+# Dall'esercitazione 1
+{:.no_toc}
+
+## Importare un dataset: da Colab e da Kaggle
+
+**Un file dal tuo computer.** In Colab clicca sull'icona della cartella, a sinistra, poi su *Carica* (la freccia verso l'alto) e scegli il file. Da lì si legge con il solo nome, `pl.read_csv("file.csv")`, come in [Pacchetti e file](#pacchetti-e-file).
+
+| cosa vuoi fare | Python | in R |
+|---|---|---|
+| scaricare un dataset da Kaggle | `import kagglehub`<br>`cartella = kagglehub.dataset_download("utente/nome-dataset")` | — (si scarica a mano dal sito di Kaggle) |
+| vedere in che cartella è finito | `cartella` | — |
+| leggere un file dentro quella cartella | `pl.read_csv(cartella + "/file.csv")` | `read.csv(file.path(cartella, "file.csv"))` |
+| attaccare due testi | `"testo1" + "testo2"` | `paste0("testo1", "testo2")` |
+
+> **Attenzione.** Il nome da dare a `dataset_download` è la parte finale dell'indirizzo della pagina Kaggle: da `kaggle.com/datasets/mirichoi0218/insurance` si scrive `"mirichoi0218/insurance"`. Per i dataset pubblici non serve un account. Il file caricato a mano, invece, sparisce quando chiudi Colab: la volta dopo va ricaricato.
+
+## Descrivere variabili qualitative e quantitative
+
+> **Come si legge.** Il tipo è scritto sotto il nome della colonna, in `head()` e in `describe()`: `str` è testo (variabile qualitativa); `i64` sono numeri interi e `f64` numeri con la virgola (variabili quantitative); `bool` è vero/falso. Per le colonne `str`, `describe()` lascia vuote (`null`) media e deviazione standard.
+
+| cosa vuoi fare | Python | in R |
+|---|---|---|
+| proporzioni per categoria (invece dei conteggi) | `dataframe["gruppo"].value_counts(normalize=True)` | `prop.table(table(dataframe$gruppo))` |
+| boxplot di una sola colonna | `ggplot(dataframe, aes(y="colonna")) + geom_boxplot()` | `ggplot(dataframe, aes(y = colonna)) + geom_boxplot()` |
+| boxplot per gruppo (gruppo di testo) | `ggplot(dataframe, aes(x="gruppo", y="colonna")) + geom_boxplot()` | `ggplot(dataframe, aes(x = gruppo, y = colonna)) + geom_boxplot()` |
+| dare un titolo alla legenda dei colori | `+ labs(color="Titolo")` | `+ labs(color = "Titolo")` |
+
+> **Nota.** Nel boxplot la scatola va dal primo al terzo quartile e la riga in mezzo è la mediana; i punti isolati sono i valori anomali. Se il gruppo è un numero (per esempio il numero di figli) si scrive `x="factor(gruppo)"`, come nella tabella dei [grafici](#i-grafici). La riga 50% di `describe()` può differire di poco da `median()`: vedi il riquadro sui quantili in [Statistiche descrittive](#statistiche-descrittive).
+
+## Filtrare, creare colonne, unire tabelle
+
+| cosa vuoi fare | Python | in R |
+|---|---|---|
+| tenere le righe di una categoria | `dataframe.filter(pl.col("gruppo") == "valore")` | `filter(dataframe, gruppo == "valore")` |
+| le 5 righe con i valori più grandi | `dataframe.sort("colonna", descending=True).head(5)` | `head(arrange(dataframe, desc(colonna)), 5)` |
+| creare una colonna vero/falso | `dataframe.with_columns(alto=pl.col("colonna") >= 30)` | `mutate(dataframe, alto = colonna >= 30)` |
+| creare più colonne insieme | `dataframe.with_columns(nuova1=pl.col("colonna") / 12, nuova2=pl.col("colonna") >= 30)` | `mutate(dataframe, nuova1 = colonna / 12, nuova2 = colonna >= 30)` |
+| media per due gruppi insieme | `dataframe.group_by("gruppo1", "gruppo2").agg(pl.col("colonna").mean())` | `dataframe %>% group_by(gruppo1, gruppo2) %>% summarise(mean(colonna))` |
+| scrivere una tabella a mano | `pl.DataFrame({"k": [1, 2], "v": ["a", "b"]})` | `data.frame(k = c(1, 2), v = c("a", "b"))` |
+| una colonna calcolata da due colonne | `dataframe.with_columns(rapporto=pl.col("colonna1") / pl.col("colonna2"))` | `mutate(dataframe, rapporto = colonna1 / colonna2)` |
+| la media di ogni gruppo, accanto a ogni riga | `medie = dataframe.group_by("gruppo").agg(media=pl.col("colonna").mean())`<br>`dataframe.join(medie, on="gruppo", how="left")` | `medie <- dataframe %>% group_by(gruppo) %>% summarise(media = mean(colonna))`<br>`left_join(dataframe, medie, by = "gruppo")` |
+
+> **Attenzione.** `filter`, `sort` e `with_columns` non cambiano la tabella: mostrano il risultato e basta. Per tenere le colonne nuove bisogna riassegnare il nome: `dataframe = dataframe.with_columns(...)`. Nei confronti il testo va tra virgolette e si usa `==`, non `=`.
+
+**Unire due tabelle, un esempio.** Una tabellina scritta a mano aggiunge a ogni riga il nome della zona in italiano; `join` cerca lo stesso valore di `region` nelle due tabelle.
+
+```python
+zone = pl.DataFrame({
+    "region": ["northeast", "northwest", "southeast", "southwest"],
+    "zona": ["Nord-Est", "Nord-Ovest", "Sud-Est", "Sud-Ovest"],
+})
+dataframe = dataframe.join(zone, on="region", how="left")
+```
+
+In R era:
+
+```r
+zone <- data.frame(
+  region = c("northeast", "northwest", "southeast", "southwest"),
+  zona = c("Nord-Est", "Nord-Ovest", "Sud-Est", "Sud-Ovest")
+)
+dataframe <- left_join(dataframe, zone, by = "region")
+```
+
+## La regressione lineare
+
+Il pacchetto è **statsmodels**: con `smf.ols` il modello si scrive con la formula di R, tra virgolette, prima la variabile da spiegare e poi `~` e i predittori. Negli esempi `colonna1` è la variabile da spiegare.
+
+| cosa vuoi fare | Python | in R |
+|---|---|---|
+| caricare il pacchetto | `import statsmodels.formula.api as smf` | — (`lm` c'è già in R) |
+| stimare una regressione semplice | `modello = smf.ols("colonna1 ~ colonna2", data=dataframe).fit()` | `modello <- lm(colonna1 ~ colonna2, data = dataframe)` |
+| i coefficienti | `modello.params` | `coefficients(modello)` |
+| un coefficiente (intercetta, pendenza) | `modello.params["Intercept"]`, `modello.params["colonna2"]` | `coefficients(modello)[1]`, `coefficients(modello)[2]` |
+| la tabella completa | `modello.summary()` | `summary(modello)` |
+| i p-value | `modello.pvalues` | `summary(modello)$coefficients[, 4]` |
+| l'R² | `modello.rsquared` | `summary(modello)$r.squared` |
+| previsione a mano | `a + b * 50` | `coefficients(modello)[1] + 50 * coefficients(modello)[2]` |
+| previsioni per nuovi valori | `nuovi = pl.DataFrame({"colonna2": [5, 10, 15]})`<br>`modello.predict(nuovi)` | `predict(modello, newdata = data.frame(colonna2 = c(5, 10, 15)))` |
+| previsioni con gli intervalli | `modello.get_prediction({"colonna2": [5, 10, 15]}).summary_frame(alpha=0.05)` | `predict(modello, newdata = data.frame(colonna2 = c(5, 10, 15)), interval = "confidence")` |
+| regressione multipla | `smf.ols("colonna1 ~ colonna2 + colonna3", data=dataframe).fit()` | `lm(colonna1 ~ colonna2 + colonna3, data = dataframe)` |
+| predittore qualitativo: una colonna 0/1 | `dataframe = dataframe.with_columns(valore=(pl.col("gruppo") == "valore").cast(pl.Int8))`<br>`smf.ols("colonna1 ~ valore", data=dataframe).fit()` | `dataframe$valore <- as.integer(dataframe$gruppo == "valore")`<br>`lm(colonna1 ~ valore, data = dataframe)` |
+| la retta sopra i punti | `ggplot(dataframe, aes(x="colonna2", y="colonna1")) + geom_point() + geom_smooth(method="lm")` | `ggplot(dataframe, aes(x = colonna2, y = colonna1)) + geom_point() + geom_smooth(method = "lm")` |
+| una retta per ogni gruppo | `ggplot(dataframe, aes(x="colonna2", y="colonna1", color="gruppo")) + geom_point() + geom_smooth(method="lm")` | `ggplot(dataframe, aes(x = colonna2, y = colonna1, color = gruppo)) + geom_point() + geom_smooth(method = "lm")` |
+
+### Leggere il risultato
+
+| cosa | dove, nel summary | cosa vuol dire |
+|---|---|---|
+| intercetta (α) | riga `Intercept`, colonna `coef` | il valore previsto di y quando x vale 0 |
+| pendenza (β) | riga della x, colonna `coef` | di quanto cambia y, in media, se x aumenta di 1 |
+| p-value | colonna `P>\|t\|` | sotto 0.05 il coefficiente è significativamente diverso da zero: la x è significativa |
+| R² | `R-squared`, in alto a destra | la parte della variabilità della y spiegata dal modello, da 0 a 1 |
+| nella multipla | ogni riga della tabella | l'effetto di quella x **a parità delle altre** |
+
+> **Come si legge.** In `summary()`: la colonna `coef` contiene i coefficienti, `P>|t|` i p-value, `R-squared` è in alto a destra. Per un predittore qualitativo si crea una colonna 0/1: vale 1 nelle righe della categoria `valore`, 0 nelle altre. Con più categorie si fa una colonna 0/1 per ognuna tranne una, che diventa la categoria di riferimento (per esempio `canale`: `negozio` e `sito`, e `App` è il riferimento). Il coefficiente di ogni colonna è quanto quella categoria si discosta, in media, dalla categoria di riferimento.
+
+> **Attenzione.** In `pl.DataFrame` delle previsioni la colonna deve chiamarsi esattamente come nel modello. Un coefficiente molto piccolo (es. 0.0002) non vuol dire per forza un effetto piccolo: dipende dall'unità di misura del predittore (un dollaro in più, non mille).
