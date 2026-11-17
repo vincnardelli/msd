@@ -12,6 +12,11 @@ notebook:
     titolo: Quanto rende la pubblicità?
     descr: I numeri e i grafici delle slide, riprodotti in Python
     dataset: advertising
+  - file: regressione_carseats
+    tipo: lezione
+    titolo: "Seggiolini auto: più variabili e variabili qualitative"
+    descr: Statistica F, R² aggiustato, dummy e categoria di riferimento
+    dataset: carseats
   - file: lab_real_estate_classe
     tipo: lab
     titolo: "LAB 1 · Real estate (classe)"
@@ -25,7 +30,8 @@ notebook:
 dati:
   - file: advertising.csv
   - file: boston.csv
-dataset: [advertising, boston]
+  - file: carseats.csv
+dataset: [advertising, boston, carseats]
 explorations: [regressione-retta, regressione-fiducia]
 ---
 
