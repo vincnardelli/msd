@@ -31,4 +31,4 @@ Il calendario ufficiale, con eventuali variazioni, è sulla [pagina del corso su
 
 Tutto in **aula 201**, tranne dove indicato: l'ultima lezione (giovedì 10 dicembre) è in **aula 101**. Attenzione all'orario delle lezioni, che cambia con il giorno: il **lunedì** (2 e 9 novembre) dalle **17:00 alle 19:00**; il **martedì** dalle **14:00 alle 17:00** il 3 e il 10 novembre, dalle **14:00 alle 16:00** dal 17 novembre; il **mercoledì** e il **giovedì 10 dicembre** dalle **14:00 alle 17:00**.
 
-Le **esercitazioni** sono di programmazione con Python applicata alla statistica e alla finanza aziendale, con Francesca Cardile (il 27 novembre e il 3, l'11 e il 15 dicembre con Niccolò Salvini).
+Le **esercitazioni** sono di programmazione con Python applicata alla statistica e alla finanza aziendale, con Francesca Cardile (il 27 novembre e l'11 dicembre con Niccolò Salvini).
