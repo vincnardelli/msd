@@ -54,7 +54,7 @@
   link: /lezione-speciale/
 - data: '2026-11-19'
   giorno: giovedì
-  ora: 10:00 – 13:00
+  ora: 10:00 – 12:00
   aula: Aula 201
   tipo: esercitazione
   docente: Francesca Cardile
@@ -70,6 +70,12 @@
   ora: 14:00 – 17:00
   aula: Aula 201
   tipo: lezione
+- data: '2026-11-26'
+  giorno: giovedì
+  ora: 10:00 – 12:00
+  aula: Aula 201
+  tipo: esercitazione
+  docente: Francesca Cardile
 - data: '2026-11-27'
   giorno: venerdì
   ora: 14:00 – 17:00
@@ -90,25 +96,31 @@
   tipo: lezione
 - data: '2026-12-03'
   giorno: giovedì
-  ora: 14:00 – 17:00
+  ora: 14:00 – 16:00
   aula: Aula 203
   tipo: esercitazione
-  docente: Francesca Cardile
+  docente: Niccolò Salvini
 - n: 11
-  data: '2026-12-07'
-  giorno: lunedì
-  ora: 17:00 – 19:00
-  aula: Aula 201
-  tipo: lezione
-- n: 12
   data: '2026-12-09'
   giorno: mercoledì
   ora: 14:00 – 17:00
   aula: Aula 201
   tipo: lezione
+- n: 12
+  data: '2026-12-10'
+  giorno: giovedì
+  ora: 14:00 – 17:00
+  aula: Aula 101
+  tipo: lezione
 - data: '2026-12-11'
   giorno: venerdì
   ora: 14:00 – 17:00
   aula: Aula 204
+  tipo: esercitazione
+  docente: Niccolò Salvini
+- data: '2026-12-15'
+  giorno: martedì
+  ora: 14:00 – 17:00
+  aula: Aula 201
   tipo: esercitazione
   docente: Niccolò Salvini
