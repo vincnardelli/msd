@@ -14,7 +14,7 @@ Per ogni cosa che vuoi fare, come si scrive in **Python** (il comando di riferim
 <div class="slide-dl">
   <a class="slide-dl__box" href="{{ site.baseurl }}/guide/dizionario.pdf" download>
     <span class="slide-dl__icon">PDF</span>
-    <span class="slide-dl__txt"><span class="slide-dl__t">Dizionario Python-R</span><span class="slide-dl__d">11 pagine, da tenere accanto al notebook</span></span>
+    <span class="slide-dl__txt"><span class="slide-dl__t">Dizionario Python-R</span><span class="slide-dl__d">13 pagine, da tenere accanto al notebook</span></span>
     <span class="slide-dl__btn">Scarica ↓</span>
   </a>
 </div>
@@ -387,3 +387,42 @@ Il pacchetto è **statsmodels**: con `smf.ols` il modello si scrive con la formu
 > **Come si legge.** In `summary()`: la colonna `coef` contiene i coefficienti, `P>|t|` i p-value, `R-squared` è in alto a destra. Per un predittore qualitativo si crea una colonna 0/1: vale 1 nelle righe della categoria `valore`, 0 nelle altre. Con più categorie si fa una colonna 0/1 per ognuna tranne una, che diventa la categoria di riferimento (per esempio `canale`: `negozio` e `sito`, e `App` è il riferimento). Il coefficiente di ogni colonna è quanto quella categoria si discosta, in media, dalla categoria di riferimento.
 
 > **Attenzione.** In `pl.DataFrame` delle previsioni la colonna deve chiamarsi esattamente come nel modello. Un coefficiente molto piccolo (es. 0.0002) non vuol dire per forza un effetto piccolo: dipende dall'unità di misura del predittore (un dollaro in più, non mille).
+
+## Le variabili dummy
+
+Una colonna di testo (per esempio `gruppo`, con le categorie `A`, `B`, `C`) si scrive **direttamente nella formula**: le variabili dummy le crea `statsmodels`. Negli esempi `colonna1` è la variabile da spiegare.
+
+| cosa vuoi fare | Python | in R |
+|---|---|---|
+| un predittore qualitativo | `modello = smf.ols("colonna1 ~ gruppo", data=dataframe).fit()` | `modello <- lm(colonna1 ~ gruppo, data = dataframe)` |
+| un predittore qualitativo e uno numerico | `smf.ols("colonna1 ~ gruppo + colonna2", data=dataframe).fit()` | `lm(colonna1 ~ gruppo + colonna2, data = dataframe)` |
+| previsioni con un predittore qualitativo | `modello.predict({"gruppo": ["A", "B"], "colonna2": [10, 10]})` | `predict(modello, newdata = data.frame(gruppo = c("A", "B"), colonna2 = c(10, 10)))` |
+
+> **Come si legge.** Nel summary ogni dummy ha una riga con il nome della colonna e la categoria: `gruppo[T.B]` vale 1 quando `gruppo` è `B`, 0 altrimenti. Con **k categorie** ci sono **k−1 dummy**: la categoria che manca è la **categoria di riferimento**, la prima in ordine alfabetico (qui `A`). L'intercetta è la media della categoria di riferimento; il coefficiente di `gruppo[T.B]` è quanto `B` si discosta, in media, da `A`. Con anche una x numerica, i coefficienti si leggono **a parità** dell'altra x: le rette dei gruppi sono parallele.
+
+> **Attenzione.** In `predict`, per la colonna di testo si scrivono le categorie **come nei dati**, tra virgolette (`"A"`, `"B"`), e si dà un valore a **ogni** x del modello. Dall'esercitazione 2 non serve più creare a mano la colonna 0/1 con `with_columns` (la riga "predittore qualitativo" in *La regressione lineare*): il risultato è lo stesso.
+
+## Grafici per gruppo e colori
+
+| cosa vuoi fare | Python | in R |
+|---|---|---|
+| il grafico di una sola categoria | `ggplot(dataframe.filter(pl.col("gruppo") == "A"), aes(x="colonna2", y="colonna1")) + geom_point()` | `ggplot(filter(dataframe, gruppo == "A"), aes(x = colonna2, y = colonna1)) + geom_point()` |
+| tutti i punti di un colore fisso | `+ geom_point(color="red")` | `+ geom_point(color = "red")` |
+| un colore per ogni categoria | `ggplot(dataframe, aes(x="colonna2", y="colonna1", color="gruppo")) + geom_point()` | `ggplot(dataframe, aes(x = colonna2, y = colonna1, color = gruppo)) + geom_point()` |
+| scegliere i colori delle categorie | `+ scale_color_manual(values={"A": "red", "B": "blue"})` | `+ scale_color_manual(values = c(A = "red", B = "blue"))` |
+
+> **Attenzione.** **Dentro** `aes` si scrivono le **colonne** (`color="gruppo"`: il colore cambia con la categoria); **fuori**, dentro `geom_point`, le scelte fisse (`color="red"`: tutti i punti rossi). Il nome del colore va tra virgolette.
+
+> **Nota.** Con `color="gruppo"` i colori li sceglie `plotnine`, in ordine alfabetico delle categorie: con due categorie `#F8766D` (rosso) e `#00BFC4` (azzurro); con tre `#F8766D`, `#00BA38` (verde) e `#619CFF` (blu). Usando gli stessi codici in `geom_point(color=...)`, i grafici di una sola categoria hanno lo stesso colore del grafico con tutte.
+
+## Un'anteprima: la regressione logistica
+
+Quando la y è **sì o no**, scritta come colonna **0/1**, al posto di `ols` si usa `logit`. Il resto del codice è lo stesso.
+
+| cosa vuoi fare | Python | in R |
+|---|---|---|
+| stimare una regressione logistica | `modello = smf.logit("y ~ colonna2", data=dataframe).fit()` | `modello <- glm(y ~ colonna2, data = dataframe, family = binomial)` |
+| la tabella completa | `modello.summary()` | `summary(modello)` |
+| la probabilità che y = 1 | `modello.predict({"colonna2": [10, 20]})` | `predict(modello, newdata = data.frame(colonna2 = c(10, 20)), type = "response")` |
+
+> **Attenzione.** La y della logistica deve essere **già** una colonna 0/1: `statsmodels` crea le dummy solo per le x. `predict` qui non dà un numero come nella lineare ma una **probabilità**, tra 0 e 1.
