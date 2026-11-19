@@ -25,7 +25,7 @@ layout: default
   {% if page.notebook.size > 0 %}
   <section id="notebook">
     <h2>Notebook</h2>
-    <p class="muted">Si aprono in Google Colab con un clic (vedi le <a href="{{ site.baseurl }}/guide/">guide</a>).</p>
+    <p class="muted">Si aprono in Google Colab con un clic (vedi le <a href="{{ site.baseurl }}/guide/">guide</a>). <strong>Per salvare il tuo lavoro scarica il notebook</strong>: in Colab File → Scarica → Scarica .ipynb, oppure il pulsante Scarica qui sotto. Per riaprirlo, su Colab File → Carica notebook: da lì Salva funziona normalmente. Se l'hai aperto con Apri in Colab, non usare Salva: Colab proverebbe a salvarlo su GitHub.</p>
     <div class="slide-dl slide-dl--codice slide-dl--nb">
       {% for nb in page.notebook %}
         {% assign path = "esercitazioni/" | append: page.number | append: "/" | append: nb.file | append: ".ipynb" %}
