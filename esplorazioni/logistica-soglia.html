@@ -187,8 +187,8 @@ function panel(m){
    <tr><th>Effettivo: No</th><td class="n ok">${num(m.tn)}<div class="mini">TN</div></td><td class="n ko">${num(m.fp)}<div class="mini">FP</div></td></tr>
    <tr><th>Effettivo: Sì</th><td class="n ko">${num(m.fn)}<div class="mini">FN</div></td><td class="n ok">${num(m.tp)}<div class="mini">TP</div></td></tr>`;
   $('cut').innerHTML=m.c>XMAX?'Con questa soglia nessun cliente viene segnalato.':`La banca segnala i clienti con saldo sopra <b>${num(m.c,0)} $</b>: ${num(m.tp+m.fp)} clienti.`;
-  $('met').innerHTML=riga('Accuratezza',m.acc,'var(--p2)','(TP + TN) / totale')+riga('Sensitività',m.sens,'var(--red)','default trovati: TP / (TP + FN)')+riga('Specificità',m.spec,'var(--ok)','buoni lasciati passare: TN / (TN + FP)')
-    +`<div class="mini">Sensitività: quanti default troviamo. Specificità: quanti clienti buoni non disturbiamo.</div>`;
+  $('met').innerHTML=riga('Accuratezza',m.acc,'var(--p2)','(TP + TN) / totale')+riga('Sensitività',m.sens,'var(--red)','recall della classe positiva: TP / (TP + FN)')+riga('Specificità',m.spec,'var(--ok)','recall della classe negativa: TN / (TN + FP)')
+    +`<div class="mini">Sensitività = <b>recall della classe positiva</b>: quanti default troviamo. Specificità = <b>recall della classe negativa</b>: quanti clienti buoni non disturbiamo. In Python sono i due <code>recall</code> del <code>classification_report</code>.</div>`;
   const v=costo(m);$('costo').textContent=num(v)+' $';
   $('costo-t').innerHTML=`${num(m.fn)} default mancati × ${num(S.cfn)} $ + ${num(m.fp)} falsi allarmi × ${num(S.cfp)} $`;
 }
