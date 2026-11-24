@@ -2,7 +2,7 @@
 title: Sposta la soglia
 slug: logistica-soglia
 capitolo: 3
-ordine: 3
+ordine: 4
 question: Il modello dà una probabilità, ma la banca deve decidere sì o no. Dove mettiamo la soglia, e quanto costa sbagliare?
 ready: true
 altezza: 720

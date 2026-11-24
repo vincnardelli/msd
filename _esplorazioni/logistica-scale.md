@@ -1,14 +1,14 @@
 ---
-title: Dal modello alla probabilità
+title: Probabilità, odds e log-odds
 slug: logistica-scale
 capitolo: 3
-ordine: 2
-question: Come si passa da β₀ e β₁ alla probabilità di default di un cliente? E perché cento dollari in più di saldo aumentano le odds del 73% per tutti, ma la probabilità no?
+ordine: 3
+question: Che cosa vuol dire «odds 1 a 4»? E un odds ratio di 2 vuol dire probabilità doppia?
 ready: true
-altezza: 1100
+altezza: 560
 dataset: [default]
 ---
 
-In **Esplora**, nella prima parte, parti dal modello: scegli β₀, β₁ e il saldo del cliente e segui la catena **modello → log-odds → odds → probabilità**, con i conti in ogni passaggio. Muovendo β₁ la curva diventa più ripida o più piatta, muovendo β₀ scivola a destra o a sinistra; «Valori del modello» riporta ai coefficienti stimati. Scegli «+100 $» per confrontare due saldi: sulle log-odds e sulle odds il cambiamento è sempre lo stesso (l'odds ratio), sulla probabilità dipende dal saldo di partenza. Nella seconda parte le tre scale a confronto: le odds si leggono «1 a 4», le log-odds sono simmetriche attorno a 0.
+In **Esplora** muovi la probabilità e guarda le altre due scale: le odds, che si leggono «1 a 4», e le log-odds, la scala su cui il modello traccia la sua retta. Le linee grigie collegano lo stesso valore sulle tre scale. A destra, la piccola curva logistica del saldo mostra quale cliente ha quella probabilità.
 
-In **Domande di business** tre domande passo per passo: quanto rischia un cliente con 1.000 e con 2.000 $, se il +73% delle slide vale per tutti, e se odds doppie vogliono dire probabilità doppia.
+In **Domande di business** due domande passo per passo: cosa vuol dire «1 a 4», e se odds doppie vogliono dire probabilità doppia.

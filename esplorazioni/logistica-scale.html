@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Dal modello alla probabilità</title>
+<title>Probabilità, odds e log-odds</title>
 <style>
   :root{--ink:#1f2937;--muted:#6b7280;--line:#e5e7eb;--soft:#f8fafc;--p1:#2563eb;--p2:#113159;--p3:#7c3aed;--red:#b91c1c;--oro:#d4930d;--ok:#059669}
   *{box-sizing:border-box}
@@ -59,54 +59,36 @@
   .ris{border:1px solid #a7f3d0;background:#ecfdf5;border-radius:10px;padding:10px 14px}
   html:fullscreen body{height:100vh;overflow:auto;padding:16px 28px;font-size:15px}
   html:fullscreen .main{grid-template-columns:minmax(0,1fr) 360px}
-  .sez{border-top:1px solid var(--line);padding-top:8px;margin:0 0 8px}
-  .ctrl3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
-  @media (max-width:700px){.ctrl3{grid-template-columns:1fr}}
-  .catena{display:grid;grid-template-columns:1fr 22px 1fr 22px 1fr 22px 1fr;align-items:stretch}
-  @media (max-width:820px){.catena{grid-template-columns:1fr}.catena .fr{transform:rotate(90deg);height:22px}}
-  .anello{border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:#fff;display:flex;flex-direction:column;gap:3px}
-  .anello.m{border-color:#c7d2fe;background:#eef2ff}
-  .anello .v{font-size:22px;font-weight:800;color:var(--p2);line-height:1.15}
-  .anello .v.b{color:var(--oro)}
-  .anello .f{font-size:12.5px;color:var(--ink)}
-  .anello .delta{align-self:flex-start;margin-top:4px;font-size:12.5px;font-weight:700;color:#fff;background:#7c3aed;border-radius:999px;padding:2px 9px}
-  .anello .delta.var{background:#b91c1c}
-  .fr{display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:18px;font-weight:700}
-  .omini{display:flex;flex-wrap:wrap;gap:3px;margin:4px 0 0}
-  .omini span{width:11px;height:16px;border-radius:6px 6px 2px 2px;background:#cbd5e1;display:inline-block}
-  .omini span.d{background:var(--red)}
-  .omini i{width:6px}
+  .r0{margin:0}
+  .cc{border:1px solid var(--line);border-radius:10px;padding:7px 12px;background:var(--soft)}
+  .pvl{font-size:18px;min-width:52px;display:inline-block}
+  .casi{grid-template-columns:repeat(2,minmax(0,1fr))}
+  @media (max-width:640px){.casi{grid-template-columns:1fr}}
 
 </style></head>
 <body>
 <div class="modi"><a id="m-esplora" class="on">Esplora</a><a id="m-casi">Domande di business</a><button class="fs" id="fs" hidden>⛶ Schermo intero</button></div>
 <div id="casi" hidden><div class="casi" id="casi-list"></div></div>
-<div class="sez"><div class="k">1 · Dal modello alla probabilità</div></div>
-<div class="ctrl3">
-  <div class="card soft"><div class="row" style="margin:0"><span class="k">β₀ intercetta</span><b id="b0-l"></b></div><input type="range" id="b0" min="-15" max="-5" step="0.05"></div>
-  <div class="card soft"><div class="row" style="margin:0"><span class="k">β₁ pendenza</span><b id="b1-l"></b></div><input type="range" id="b1" min="0.002" max="0.009" step="0.0001"></div>
-  <div class="card soft"><div class="row" style="margin:0"><span class="k">Saldo del cliente</span><b id="x-l"></b></div><input type="range" id="x" min="0" max="2800" step="10"></div>
-</div>
-<div class="row" style="margin:8px 0">
-  <button class="btn" id="b-fit">Valori del modello</button>
-  <span class="k" style="margin-left:8px">Confronta</span>
-  <div class="pills" id="dd"><button data-d="0" class="on">un cliente</button><button data-d="100">+100 $</button><button data-d="500">+500 $</button><button data-d="1000">+1.000 $</button></div>
-</div>
-<div class="catena" id="catena"></div>
-<div class="main" style="margin-top:12px">
-  <div><div class="k">La curva del modello</div><svg id="gp" viewBox="0 0 760 260"></svg></div>
+<div class="main">
+  <div>
+    <div class="cc" style="margin-bottom:8px"><div class="row r0"><span class="k">Probabilità di default</span><b id="pv-l" class="pvl"></b></div>
+      <input type="range" id="pv" min="0.01" max="0.99" step="0.01" value="0.2"></div>
+    <svg id="sc" viewBox="0 0 760 270"></svg>
+    <div class="mini">Le linee grigie collegano 10%, 20%, … 90% sulle tre scale: sulle odds i valori sotto il 50% stanno tutti tra 0 e 1, sulle log-odds sono simmetrici attorno a 0.</div>
+  </div>
   <div class="side">
-    <div id="pan-esplora" class="side"><div class="card" id="lettura"></div></div>
+    <div id="pan-esplora" class="side">
+      <div class="card"><div class="k">Sulla curva del modello</div><svg id="mini" viewBox="0 0 290 150"></svg><div class="mini" id="mini-t"></div></div>
+      <div class="card soft">
+        <table class="t"><tr><td>Probabilità p</td><td id="t-p"></td></tr>
+          <tr><td>Odds p / (1 − p)</td><td id="t-o"></td></tr>
+          <tr><td>A parole</td><td id="t-w"></td></tr>
+          <tr><td>Log-odds ln(odds)</td><td id="t-l"></td></tr></table>
+      </div>
+    </div>
     <div id="pan-casi" hidden data-pancasi></div>
   </div>
 </div>
-<div class="sez" style="margin-top:16px"><div class="k">2 · Le tre scale a confronto</div></div>
-<div class="card soft" style="margin-bottom:10px">
-  <div class="row" style="margin:0"><span class="k">Probabilità del cliente</span><b id="pv-l" style="font-size:18px"></b><span class="mini" id="pv-t"></span></div>
-  <input type="range" id="pv" min="0.005" max="0.99" step="0.005">
-</div>
-<svg id="sc" viewBox="0 0 760 250"></svg>
-<div class="mini">Le linee grigie collegano 10%, 20%, … 90% sulle tre scale: sulle odds i valori sotto il 50% sono schiacciati tra 0 e 1, sulle log-odds sono simmetrici attorno a 0. Muovendo la probabilità si muove anche il saldo del cliente nella prima parte, e viceversa.</div>
 
 <script>
 const $=id=>document.getElementById(id);
@@ -141,101 +123,62 @@ function initCasi(){CASI.forEach((C,i)=>{const b=document.createElement('button'
   if(window.parent!==window&&window.ResizeObserver)new ResizeObserver(()=>parent.postMessage({esplorazione:document.body.scrollHeight},'*')).observe(document.body);}
 const PANCASI=`<div class="card"><div class="domanda" id="c-dom"></div><div class="passo" id="c-txt"></div><div class="nav"><button class="btn" id="c-prev">← Indietro</button><button class="btn pri" id="c-next">Avanti →</button><span class="mini" id="c-n"></span></div></div><div class="ris" id="c-ris" hidden></div>`;
 document.querySelectorAll('[data-pancasi]').forEach(e=>e.innerHTML=PANCASI);
-// ── Dal modello alla probabilità ──
+// ── Probabilità, odds e log-odds ──
 const odds=p=>p/(1-p), lo=p=>Math.log(odds(p));
 const sgn=(x,d)=>(x>=0?'+':'−')+num(Math.abs(x),d);
 const neg=(x,d)=>(x<0?'−':'')+num(Math.abs(x),d);
-const S={b0:FIT.a,b1:FIT.b,x:2000,dd:0};
-const XMAXC=2800,clampX=x=>Math.max(0,Math.min(XMAXC,x)),xDaP=p=>clampX((Math.log(p/(1-p))-S.b0)/S.b1);
-const L=(x,s=S)=>s.b0+s.b1*x, P=(x,s=S)=>sig(L(x,s));
-function aParole(p){const r=p<=0.5?(1-p)/p:p/(1-p);const rs=r>=100?num(r,0):Math.abs(r-Math.round(r))<0.05?num(Math.round(r)):num(r,1);return p<=0.5?`1 a ${rs}`:`${rs} a 1`;}
-function omini(p){let b={k:1,n:2,e:9};for(let n=2;n<=20;n++){const k=Math.round(p*n);if(k<1||k>=n)continue;const e=Math.abs(k/n-p);if(e<b.e-1e-9)b={k,n,e};}
-  if(p<0.03||p>0.97)return '';return '<div class="omini">'+'<span class="d"></span>'.repeat(b.k)+'<i></i>'+'<span></span>'.repeat(b.n-b.k)+'</div>';}
-function catena(){
-  const a=S.x,b=S.x+S.dd,c=S.dd>0,la=L(a),lb=L(b),pa=P(a),pb=P(b),oa=Math.exp(la),ob=Math.exp(lb);
-  const riga=(lab,va,vb)=>`<div class="v">${va}</div>`+(c?`<div class="v b">${vb}</div>`:'');
-  const fx=x=>`${neg(S.b0,2)} + ${num(S.b1,4)} × ${num(Math.round(x))}`;
-  $('catena').innerHTML=
-   `<div class="anello m"><div class="k">Il modello</div><div class="f">β₀ + β₁ × saldo</div><div class="f">${fx(a)}</div>${c?`<div class="f" style="color:var(--oro)">${fx(b)}</div>`:''}<div class="mini">β₀ e β₁ sono gli stessi per tutti i clienti: cambia solo il saldo.</div></div>
-   <div class="fr">→</div>
-   <div class="anello"><div class="k">Log-odds</div>${riga('',neg(la,2),neg(lb,2))}<div class="mini">La lingua del modello: qui è una retta.</div>${c?`<span class="delta">${sgn(lb-la,2)}: sempre uguale</span>`:''}</div>
-   <div class="fr">→</div>
-   <div class="anello"><div class="k">Odds</div><div class="f">e<sup>log-odds</sup></div>${riga('',num(oa,oa<0.1?4:2),num(ob,ob<0.1?4:2))}<div class="f">${aParole(pa)}${c?` <span style="color:var(--oro)">→ ${aParole(pb)}</span>`:''}</div>${c?'':omini(pa)}${c?`<span class="delta">× ${num(ob/oa,2)}: sempre uguale</span>`:''}</div>
-   <div class="fr">→</div>
-   <div class="anello"><div class="k">Probabilità</div><div class="f">odds / (1 + odds)</div>${riga('',pct(pa,1),pct(pb,1))}<div class="mini">La lingua del manager.</div>${c?`<span class="delta var">${sgn(100*(pb-pa),1)} punti: dipende dal saldo</span>`:''}</div>`;
-  $('b0-l').textContent=neg(S.b0,2);$('b1-l').textContent=num(S.b1,4);$('x-l').textContent=num(Math.round(S.x))+' $';
-  $('b0').value=S.b0;$('b1').value=S.b1;$('x').value=S.x;[...$('dd').children].forEach(e=>e.classList.toggle('on',+e.dataset.d===S.dd));
-  const fit=Math.abs(S.b0-FIT.a)<0.03&&Math.abs(S.b1-FIT.b)<0.00006;
-  $('lettura').innerHTML=c?`<div class="k">Come si legge</div>Con ${num(S.dd)} $ in più di saldo le log-odds salgono di <b>${num(lb-la,2)}</b> (= ${num(S.dd)} × β₁) e le odds si moltiplicano per <b>${num(ob/oa,2)}</b> (= e<sup>${num(lb-la,2)}</sup>, l'odds ratio): per <b>qualunque</b> saldo di partenza. La probabilità invece sale di ${num(100*(pb-pa),1)} punti: sposta il saldo del cliente e guarda il riquadro rosso.`
-   :`<div class="k">Come si legge</div>${fit?'Questi sono i coefficienti stimati da <code>smf.logit</code> sui 10.000 clienti.':'<span class="warn">Non sono i coefficienti stimati</span>: premi «Valori del modello» per tornarci.'} Muovi <b>β₁</b>: la curva diventa più ripida o più piatta. Muovi <b>β₀</b>: la curva scivola a destra o a sinistra. Poi scegli «+100 $» per vedere come si legge β₁.`;
-  grafico();drawScale();
-}
-function grafico(){
-  const svg=$('gp');svg.innerHTML='';const W=760,H=260,ml=50,mr=10,mt=10,mb=32,XM=XMAXC;
-  const X=x=>ml+x/XM*(W-ml-mr),Y=y=>mt+(1-y)*(H-mt-mb);const g=el('g',{},svg);
-  for(const v of [0,0.25,0.5,0.75,1]){el('line',{x1:ml,x2:W-mr,y1:Y(v),y2:Y(v),stroke:'#eef2f7'},g);txt(ml-6,Y(v)+4,pct(v,0),'tick',g,'end');}
-  for(let x=0;x<=2500;x+=500)txt(X(x),H-14,num(x)+' $','tick',g);
-  if(Math.abs(S.b0-FIT.a)>0.03||Math.abs(S.b1-FIT.b)>0.00006){let d='';for(let x=0;x<=XM;x+=20)d+=(x?'L':'M')+X(x).toFixed(1)+','+Y(sig(FIT.a+FIT.b*x)).toFixed(1);el('path',{d,fill:'none',stroke:'#cbd5e1','stroke-width':2,'stroke-dasharray':'5 4'},g);}
-  let d='';for(let x=0;x<=XM;x+=20)d+=(x?'L':'M')+X(x).toFixed(1)+','+Y(P(x)).toFixed(1);el('path',{d,fill:'none',stroke:'#113159','stroke-width':2.5},g);
-  const a=S.x,b=S.x+S.dd;
-  el('line',{x1:X(a),x2:X(a),y1:Y(0),y2:Y(P(a)),stroke:'#2563eb','stroke-dasharray':'3 3'},g);
-  if(S.dd){el('line',{x1:X(b),x2:X(b),y1:Y(P(a)),y2:Y(P(b)),stroke:'#b91c1c','stroke-width':4,'stroke-linecap':'round'},g);
-    el('line',{x1:X(a),x2:X(b),y1:Y(P(a)),y2:Y(P(a)),stroke:'#7c3aed','stroke-dasharray':'3 3'},g);el('circle',{cx:X(b),cy:Y(P(b)),r:6,fill:'#d4930d'},g);}
-  el('circle',{cx:X(a),cy:Y(P(a)),r:6,fill:'#2563eb'},g);
-}
-$('b0').oninput=e=>{S.b0=+e.target.value;catena();};
-$('b1').oninput=e=>{S.b1=+e.target.value;catena();};
-$('x').oninput=e=>{S.x=+e.target.value;catena();};
-$('b-fit').onclick=()=>{S.b0=FIT.a;S.b1=FIT.b;catena();};
-$('dd').querySelectorAll('button').forEach(b=>b.onclick=()=>{S.dd=+b.dataset.d;catena();});
-
-// parte 2: tre scale
-const sc=$('sc'),SL=70,SR=740;
+function aParole(p){const r=p<=0.5?(1-p)/p:p/(1-p);const rs=Math.abs(r-Math.round(r))<0.05?num(Math.round(r)):num(r,1);return p<=0.5?`1 a ${rs}`:`${rs} a 1`;}
+const S={p:0.2};
+const sc=$('sc'),SL=86,SR=744;
 const SCALE=[
- {k:'Probabilità',y:45,min:0,max:1,f:p=>p,ticks:[0,0.25,0.5,0.75,1],lab:v=>pct(v,0)},
- {k:'Odds',y:130,min:0,max:10,f:odds,ticks:[0,1,2,4,6,8,10],lab:v=>num(v)},
- {k:'Log-odds',y:215,min:-5,max:5,f:lo,ticks:[-4,-2,0,2,4],lab:v=>v?sgn(v,0):'0'}];
+ {k:'Probabilità',y:50,min:0,max:1,f:p=>p,ticks:[0,0.25,0.5,0.75,1],lab:v=>pct(v,0)},
+ {k:'Odds',y:142,min:0,max:10,f:odds,ticks:[0,1,2,4,6,8,10],lab:v=>num(v)},
+ {k:'Log-odds',y:234,min:-5,max:5,f:lo,ticks:[-4,-2,0,2,4],lab:v=>v?sgn(v,0):'0'}];
 const pos=(s,v)=>SL+(Math.max(s.min,Math.min(s.max,v))-s.min)/(s.max-s.min)*(SR-SL);
-function drawScale(){
-  const pA=P(S.x),pB=S.dd?P(S.x+S.dd):null;
+function draw(){
   sc.innerHTML='';const g=el('g',{},sc);
   for(const q of [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9]){let d='';SCALE.forEach((s,i)=>{d+=(i?'L':'M')+pos(s,s.f(q)).toFixed(1)+','+s.y;});el('path',{d,fill:'none',stroke:'#e2e8f0','stroke-width':1.2},g);}
-  for(const s of SCALE){el('line',{x1:SL,x2:SR,y1:s.y,y2:s.y,stroke:'#94a3b8','stroke-width':2},g);txt(SL-10,s.y+4,s.k,'axt',g,'end');
+  for(const s of SCALE){el('line',{x1:SL,x2:SR,y1:s.y,y2:s.y,stroke:'#94a3b8','stroke-width':2},g);txt(SL-12,s.y+4,s.k,'axt',g,'end');
     for(const t of s.ticks){el('line',{x1:pos(s,t),x2:pos(s,t),y1:s.y-4,y2:s.y+4,stroke:'#94a3b8'},g);txt(pos(s,t),s.y+18,s.lab(t),'tick',g);}}
-  const punto=(p,col,su)=>{let d='';SCALE.forEach((s,i)=>{d+=(i?'L':'M')+pos(s,s.f(p)).toFixed(1)+','+s.y;});el('path',{d,fill:'none',stroke:col,'stroke-width':2,'stroke-dasharray':'5 4'},g);
-    SCALE.forEach((s,i)=>{const v=s.f(p),x=pos(s,v);el('circle',{cx:x,cy:s.y,r:7,fill:col},g);
-      const lab=i===0?pct(p,1):i===1?num(v,2)+' · '+aParole(p)+(v>s.max?' →':''):neg(v,2);const t=txt(x,s.y+(su?-12:30),lab,'axt',g);t.setAttribute('fill',col);});};
-  if(pB!==null)punto(pB,'#d4930d',false);
-  punto(pA,'#2563eb',true);
-  $('pv-l').textContent=pct(pA,1);$('pv').value=pA;
-  $('pv-t').textContent=`saldo ${num(Math.round(S.x))} $`+(S.x>=XMAXC||S.x<=0?' (limite del cursore)':'');
+  let d='';SCALE.forEach((s,i)=>{d+=(i?'L':'M')+pos(s,s.f(S.p)).toFixed(1)+','+s.y;});el('path',{d,fill:'none',stroke:'#b91c1c','stroke-width':2,'stroke-dasharray':'5 4'},g);
+  SCALE.forEach((s,i)=>{const v=s.f(S.p),x=pos(s,v);el('circle',{cx:x,cy:s.y,r:7,fill:'#b91c1c'},g);
+    const lab=i===0?pct(S.p,0):i===1?num(v,2)+(v>s.max?' →':''):neg(v,2);const t=txt(Math.min(SR-10,Math.max(SL+10,x)),s.y-13,lab,'axt',g);t.setAttribute('fill','#b91c1c');});
+  $('pv-l').textContent=pct(S.p,0);$('pv').value=S.p;
+  $('t-p').textContent=pct(S.p,0);$('t-o').textContent=num(odds(S.p),2);$('t-w').textContent=aParole(S.p);$('t-l').textContent=neg(lo(S.p),2);
+  mini();
 }
-$('pv').oninput=e=>{S.x=xDaP(+e.target.value);catena();};
+// piccola logistica: il saldo che dà questa probabilità
+function mini(){
+  const svg=$('mini');svg.innerHTML='';const W=290,H=150,ml=30,mr=6,mt=6,mb=20,XM=2800;
+  const X=x=>ml+x/XM*(W-ml-mr),Y=y=>mt+(1-y)*(H-mt-mb);const g=el('g',{},svg);
+  for(const v of [0,0.5,1]){el('line',{x1:ml,x2:W-mr,y1:Y(v),y2:Y(v),stroke:'#eef2f7'},g);txt(ml-4,Y(v)+4,pct(v,0),'tick',g,'end');}
+  for(const x of [0,1000,2000])txt(X(x),H-5,num(x)+' $','tick',g);
+  let d='';for(let x=0;x<=XM;x+=25)d+=(x?'L':'M')+X(x).toFixed(1)+','+Y(sig(FIT.a+FIT.b*x)).toFixed(1);el('path',{d,fill:'none',stroke:'#113159','stroke-width':2},g);
+  const xs=(lo(S.p)-FIT.a)/FIT.b,xc=Math.max(0,Math.min(XM,xs));
+  el('line',{x1:X(xc),x2:X(xc),y1:Y(0),y2:Y(S.p),stroke:'#b91c1c','stroke-dasharray':'3 3'},g);
+  el('line',{x1:ml,x2:X(xc),y1:Y(S.p),y2:Y(S.p),stroke:'#b91c1c','stroke-dasharray':'3 3'},g);
+  el('circle',{cx:X(xc),cy:Y(S.p),r:5,fill:'#b91c1c'},g);
+  $('mini-t').innerHTML=`Per il modello sul saldo, è il rischio di un cliente con circa <b>${num(Math.round(xs/10)*10)} $</b> di saldo.`;
+}
+$('pv').oninput=e=>{S.p=+e.target.value;draw();};
 
-applica=s=>{if(s.fit){S.b0=FIT.a;S.b1=FIT.b;}for(const k of ['b0','b1','x','dd'])if(k in s)S[k]=s[k];if('p' in s)S.x=xDaP(s.p);catena();};
-const pb=x=>sig(FIT.a+FIT.b*x), O1=Math.exp(FIT.b*100);
+applica=s=>{if('p' in s)S.p=s.p;draw();};
 CASI=[
-{tag:'Dal modello',t:'Quanto rischia un cliente?',q:'Il modello stimato è log-odds = −10,65 + 0,0055 × saldo. Che probabilità di default ha un cliente con 1.000 $? E uno con 2.000 $?',
+{tag:'Odds',t:'Cosa vuol dire «1 a 4»?',q:'Il 20% dei clienti di un segmento va in default. Come lo dice uno scommettitore? E il modello?',
  passi:[
-  {set:{fit:true,x:1000,dd:0},txt:c=>`Saldo 1.000 $. <b>Modello</b>: −10,65 + 0,0055 × 1.000 = ${neg(FIT.a+FIT.b*1000,2)} di log-odds. <b>Odds</b>: e<sup>${neg(FIT.a+FIT.b*1000,2)}</sup> = ${num(Math.exp(FIT.a+FIT.b*1000),4)}, cioè ${aParole(pb(1000))}. <b>Probabilità</b>: ${pct(pb(1000),1)}.`},
-  {set:{x:2000},txt:c=>`Saldo 2.000 $: log-odds ${neg(FIT.a+FIT.b*2000,2)}, odds ${num(Math.exp(FIT.a+FIT.b*2000),2)} (${aParole(pb(2000))}), probabilità <b>${pct(pb(2000),1)}</b>. Gli stessi tre passaggi delle slide.`},
-  {set:{b1:0.008},txt:c=>`E se il saldo pesasse di più? Con β₁ = 0,008 la curva è più ripida e lo stesso cliente da 2.000 $ ha probabilità ${pct(sig(FIT.a+0.008*2000),1)}. I parametri decidono la forma della curva; il saldo decide dove sta il cliente.`,
-   ris:c=>`Il modello lavora sempre in tre passaggi: <b>β₀ + β₁ × saldo</b> dà le log-odds, <b>e<sup>log-odds</sup></b> dà le odds, <b>odds / (1 + odds)</b> dà la probabilità. β₀ e β₁ entrano solo nel primo; gli altri due sono traduzioni.`}]},
-{tag:'Odds ratio',t:'Il +73% vale per tutti?',q:'Nelle slide: ogni 100 $ di saldo in più, le odds di default aumentano del 73%. Vale per un cliente con 1.000 $ e per uno con 1.900 $?',
+  {set:{p:0.2},txt:c=>`Probabilità 20%: su 5 clienti, 1 va in default e 4 pagano. Le <b>odds</b> confrontano i due gruppi: 1 a 4, cioè 0,25. Le log-odds sono ln(0,25) = −1,39.`},
+  {set:{p:0.5},txt:c=>`Probabilità 50%: tanti default quanti clienti che pagano. Odds <b>1 a 1</b>, cioè 1; log-odds <b>0</b>. È il centro di tutte e tre le scale.`},
+  {set:{p:0.8},txt:c=>`Probabilità 80%: odds <b>4 a 1</b>, cioè 4; log-odds <b>+1,39</b>. Sulle odds i valori sotto il 50% sono schiacciati tra 0 e 1; sulle log-odds 20% e 80% sono simmetrici attorno allo zero.`,
+   ris:c=>`Probabilità, odds e log-odds dicono la stessa cosa in tre lingue: il manager parla in probabilità, lo scommettitore in odds, il modello in log-odds. Le log-odds vanno da −∞ a +∞ e sono simmetriche: per questo il modello mette lì la sua retta.`}]},
+{tag:'Attenzione',t:'Odds doppie, probabilità doppia?',q:'Un odds ratio di 2 vuol dire che la probabilità raddoppia?',
  passi:[
-  {set:{fit:true,x:1000,dd:100},txt:c=>`Da 1.000 a 1.100 $: log-odds +${num(FIT.b*100,2)}, odds × ${num(O1,2)}, probabilità da ${pct(pb(1000),1)} a ${pct(pb(1100),1)}: <b>${num(100*(pb(1100)-pb(1000)),1)} punti</b>.`},
-  {set:{x:1500},txt:c=>`Da 1.500 a 1.600 $: log-odds e odds cambiano esattamente come prima. La probabilità sale di <b>${num(100*(pb(1600)-pb(1500)),1)} punti</b>.`},
-  {set:{x:1900},txt:c=>`Da 1.900 a 2.000 $: ancora +${num(FIT.b*100,2)} e × ${num(O1,2)}. La probabilità sale di <b>${num(100*(pb(2000)-pb(1900)),1)} punti</b>.`,
-   ris:c=>`Sì: «+73% di odds ogni 100 $» vale per tutti i clienti, perché β₁ agisce sulle log-odds, dove il modello è una retta, e quindi moltiplica le odds sempre per lo stesso numero, e<sup>100 × β₁</sup> = ${num(O1,2)}. Quanti <b>punti di probabilità</b> siano dipende invece da dove parte il cliente.`}]},
-{tag:'Attenzione',t:'Odds doppie, probabilità doppia?',q:'Un odds ratio di 2 vuol dire che la probabilità raddoppia? Guarda la seconda parte, le tre scale.',
- passi:[
-  {set:{p:0.05,dd:0},txt:c=>`Probabilità 5%: odds ${num(odds(0.05),3)}.`},
+  {set:{p:0.05},txt:c=>`Probabilità 5%: odds ${num(odds(0.05),3)}.`},
   {set:{p:0.10},txt:c=>`Probabilità 10%: odds ${num(odds(0.1),3)}. La probabilità è raddoppiata e le odds quasi: × ${num(odds(0.1)/odds(0.05),2)}.`},
   {set:{p:0.40},txt:c=>`Ora partiamo da 40%: odds ${num(odds(0.4),2)}.`},
   {set:{p:0.80},txt:c=>`Probabilità 80%, il doppio di 40%: le odds passano da ${num(odds(0.4),2)} a ${num(odds(0.8),2)}, cioè × <b>${num(odds(0.8)/odds(0.4),0)}</b>.`,
    ris:c=>`No. L'odds ratio è un rapporto tra <b>odds</b>. Quando la probabilità è piccola (come i default, 3%) odds e probabilità quasi coincidono e «odds doppie» è circa «probabilità doppia»; quando è grande, no.`}]}
 ];
-catena();initCasi();
+draw();initCasi();
 
 </script>
 </body></html>
