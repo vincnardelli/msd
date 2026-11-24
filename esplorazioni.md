@@ -14,13 +14,20 @@ Pagine interattive, una per concetto: si gioca con un controllo e si guarda cosa
 <div class="via"><div class="via__k">In arrivo</div>Le esplorazioni vengono pubblicate insieme ai capitoli a cui si riferiscono.</div>
 {% endif %}
 
-<div class="espl-grid">
 {% assign esplorazioni = site.esplorazioni | sort: "ordine" %}
-{% for e in esplorazioni %}
+{% assign capitoli = site.capitoli | sort: "number" %}
+{% for c in capitoli %}
+{% assign espl_cap = esplorazioni | where: "capitolo", c.number %}
+{% if espl_cap.size > 0 %}
+<h2 class="sezione-h sezione-h--{{ c.sezione }}"><a href="{{ site.baseurl }}{{ c.url }}">{{ c.number }} · {{ c.title }}</a></h2>
+<div class="espl-grid">
+{% for e in espl_cap %}
 <a class="espl-card" href="{{ site.baseurl }}{{ e.url }}">
   <div class="espl-card__title">{{ e.title }}</div>
   <div class="espl-card__q">{{ e.question }}</div>
-  <div class="muted">capitolo {{ e.capitolo }}{% unless e.ready %} · in arrivo{% endunless %}</div>
+  {% unless e.ready %}<div class="muted">in arrivo</div>{% endunless %}
 </a>
 {% endfor %}
 </div>
+{% endif %}
+{% endfor %}
