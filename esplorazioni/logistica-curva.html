@@ -66,7 +66,7 @@
 <div id="casi" hidden><div class="casi" id="casi-list"></div></div>
 <div class="main">
   <div class="chart"><svg id="svg" viewBox="0 0 760 420"></svg>
-    <div class="row" style="margin:6px 0 0"><label class="ck"><i style="background:#b91c1c;height:8px;width:8px;border-radius:50%"></i>default</label><label class="ck"><i style="background:#94a3b8;height:8px;width:8px;border-radius:50%"></i>ha pagato</label><label class="ck"><i style="background:#d4930d;height:8px;width:8px"></i>quota di default ogni 100 $</label><span class="mini">Punti: tutti i 333 default e 1.000 clienti a caso tra gli altri.</span></div>
+    <div class="row" style="margin:6px 0 0"><label class="ck"><i style="background:#b91c1c;height:8px;width:8px;border-radius:50%"></i>default</label><label class="ck"><i style="background:#94a3b8;height:8px;width:8px;border-radius:50%"></i>ha pagato</label><label class="ck"><input type="checkbox" id="c-bar" checked><i style="background:#d4930d;opacity:.6;height:10px;width:10px"></i>quota di default ogni 100 $</label><span class="mini">Punti: tutti i 333 default e 1.000 clienti a caso tra gli altri.</span></div>
   </div>
   <div class="side">
     <div id="pan-esplora" class="side">
@@ -145,7 +145,7 @@ const PTS=(()=>{let s=7;const r=()=>{s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>
 const BINS=(()=>{const c={},d={};for(let i=0;i<N;i++){const k=Math.floor(D.b[i]/100);c[k]=(c[k]||0)+1;d[k]=(d[k]||0)+D.y[i];}
   return Object.keys(c).filter(k=>c[k]>=20).map(k=>({x:+k*100+50,p:d[k]/c[k],n:c[k]}));})();
 
-const S={mode:'curva',a:A0,b:0,anim:null,marks:[],pv:1500};
+const S={mode:'curva',a:A0,b:0,anim:null,marks:[],pv:1500,bar:true};
 const svg=$('svg');let drag=null;
 function draw(){
   svg.innerHTML='';
@@ -157,10 +157,10 @@ function draw(){
   for(let x=0;x<=2500;x+=500){el('line',{x1:sx(x),x2:sx(x),y1:sy(YMIN),y2:sy(YMIN)+5,stroke:'#94a3b8'},g);txt(sx(x),sy(YMIN)+18,num(x)+' $','tick',g);}
   txt((ML+W-MR)/2,H-4,'Saldo della carta','axt',g);
   const yl=txt(14,(MT+H-MB)/2,'Probabilità di default','axt',g);yl.setAttribute('transform',`rotate(-90 14 ${(MT+H-MB)/2})`);
+  // quota di default per fasce di 100 $: barre dietro a tutto
+  if(S.bar)for(const q of BINS)el('rect',{x:sx(q.x-50)+1,y:sy(q.p),width:sx(100)-sx(0)-2,height:Math.max(0,sy(0)-sy(q.p)),fill:'#d4930d','fill-opacity':0.35,stroke:'#d4930d','stroke-opacity':0.6},g);
   // punti
   for(const p of PTS)el('circle',{cx:sx(p.x),cy:sy(p.y+p.j),r:2.2,fill:p.y?'#b91c1c':'#64748b','fill-opacity':p.y?0.55:0.25},g);
-  // quote per fascia
-  for(const q of BINS)el('rect',{x:sx(q.x)-4,y:sy(q.p)-4,width:8,height:8,fill:'#d4930d',stroke:'#fff','stroke-width':1},g);
   // modello
   if(S.mode==='retta'){
     el('line',{x1:sx(0),y1:sy(LIN.a),x2:sx(XMAX),y2:sy(LIN.a+LIN.b*XMAX),stroke:'#2563eb','stroke-width':3},g);
@@ -200,16 +200,17 @@ $('modi-m').querySelectorAll('button').forEach(b=>b.onclick=()=>{S.mode=b.datase
 $('b-flat').onclick=()=>goTo(A0,0);
 $('b-best').onclick=()=>goTo(FIT.a,FIT.b);
 $('pred').oninput=e=>{S.pv=+e.target.value;draw();};
+$('c-bar').onchange=e=>{S.bar=e.target.checked;draw();};
 
 ctx=()=>({});
-applica=s=>{if(s.mode)S.mode=s.mode;if('marks' in s)S.marks=s.marks;if(s.fit==='flat')goTo(A0,0);else if(s.fit==='best')goTo(FIT.a,FIT.b);else if(s.fit==='poco')goTo(-6,0.0018);else draw();};
+applica=s=>{if(s.mode)S.mode=s.mode;if('bar' in s){S.bar=s.bar;$('c-bar').checked=s.bar;}if('marks' in s)S.marks=s.marks;if(s.fit==='flat')goTo(A0,0);else if(s.fit==='best')goTo(FIT.a,FIT.b);else if(s.fit==='poco')goTo(-6,0.0018);else draw();};
 const P1=sig(FIT.a+FIT.b*1000),P2=sig(FIT.a+FIT.b*2000);
 CASI=[
 {tag:'Retta o curva',t:'Perché non una retta?',q:'La banca vuole la probabilità che un cliente vada in default. Possiamo usare la regressione lineare che conosciamo?',
  passi:[
-  {set:{mode:'retta',marks:[],fit:'flat'},txt:c=>`Ogni punto è un cliente: in alto chi è andato in default (333 su 10.000), in basso chi ha pagato. I quadratini gialli sono la <b>quota di default</b> per fasce di 100 $ di saldo. La retta blu è la regressione lineare di default (0/1) sul saldo.`},
+  {set:{mode:'retta',marks:[],fit:'flat',bar:true},txt:c=>`Ogni punto è un cliente: in alto chi è andato in default (333 su 10.000), in basso chi ha pagato. Le barre gialle sono la <b>quota di default</b> per fasce di 100 $ di saldo. La retta blu è la regressione lineare di default (0/1) sul saldo.`},
   {set:{marks:[0,500]},txt:c=>`Con saldi bassi la retta scende sotto lo zero: a 0 $ prevede ${pct(LIN.a,1)}, a 500 $ ${pct(LIN.a+LIN.b*500,1)}. <b>Una probabilità negativa non ha senso.</b> E con saldi alti la retta resta molto sotto le quote osservate.`},
-  {set:{mode:'curva',marks:[],fit:'best'},txt:c=>`La curva logistica resta sempre tra 0 e 1: piatta dove il rischio è quasi nullo, ripida tra 1.500 e 2.000 $, e segue i quadratini gialli.`,
+  {set:{mode:'curva',marks:[],fit:'best'},txt:c=>`La curva logistica resta sempre tra 0 e 1: piatta dove il rischio è quasi nullo, ripida tra 1.500 e 2.000 $, e segue le barre gialle.`,
    ris:c=>`Quando la risposta è sì o no, vogliamo una <b>probabilità</b>, che deve stare tra 0 e 1. La retta non lo garantisce; la curva a S della regressione logistica sì.`}]},
 {tag:'Massima verosimiglianza',t:'Come si sceglie la curva?',q:'Per la retta minimizzavamo la somma dei quadrati dei residui. E per la curva?',
  passi:[
