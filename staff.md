@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Chi siamo
-description: Docente ed esercitatrice del corso, con i contatti.
+description: Il docente e gli esercitatori del corso, con i contatti.
 nav_order: 99
 ---
 
