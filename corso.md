@@ -35,7 +35,7 @@ Gli altri capitoli compaiono qui man mano che si fanno a lezione.
 <div class="moduli-list">
 {% for e in eserc %}
 <a class="modulo-row modulo-row--pe" href="{{ site.baseurl }}{{ e.url }}">
-  <div class="modulo-row__n">E{{ e.number }}</div>
+  <div class="modulo-row__n">E{{ e.number }}{% if e.etichetta %}<small style="display:block;font-size:0.5em;white-space:nowrap;">{{ e.etichetta }}</small>{% endif %}</div>
   <div><div class="modulo-row__t">{{ e.title }}</div><div class="modulo-row__i">{{ e.idea }}</div></div>
   <div><span class="tag tag--lang">Python</span></div>
 </a>

@@ -14,7 +14,7 @@ Per ogni cosa che vuoi fare, come si scrive in **Python** (il comando di riferim
 <div class="slide-dl">
   <a class="slide-dl__box" href="{{ site.baseurl }}/guide/dizionario.pdf" download>
     <span class="slide-dl__icon">PDF</span>
-    <span class="slide-dl__txt"><span class="slide-dl__t">Dizionario Python-R</span><span class="slide-dl__d">13 pagine, da tenere accanto al notebook</span></span>
+    <span class="slide-dl__txt"><span class="slide-dl__t">Dizionario Python-R</span><span class="slide-dl__d">15 pagine, da tenere accanto al notebook</span></span>
     <span class="slide-dl__btn">Scarica ↓</span>
   </a>
 </div>
@@ -426,3 +426,52 @@ Quando la y è **sì o no**, scritta come colonna **0/1**, al posto di `ols` si 
 | la probabilità che y = 1 | `modello.predict({"colonna2": [10, 20]})` | `predict(modello, newdata = data.frame(colonna2 = c(10, 20)), type = "response")` |
 
 > **Attenzione.** La y della logistica deve essere **già** una colonna 0/1: `statsmodels` crea le dummy solo per le x. `predict` qui non dà un numero come nella lineare ma una **probabilità**, tra 0 e 1.
+
+## La regressione logistica
+
+La y è una colonna **0/1**; negli esempi si chiama `y`, e `colonna2` è la x. Il modello si stima con `smf.logit`, come nell'anteprima.
+
+| cosa vuoi fare | Python | in R |
+|---|---|---|
+| la probabilità di ogni riga, in una colonna | `dataframe = dataframe.with_columns(prob=modello.predict())` | `dataframe$prob <- predict(modello, type = "response")` |
+| la curva sopra i punti | `ggplot(dataframe, aes(x="colonna2", y="y")) + geom_point() + geom_line(aes(y="prob"))` | `ggplot(dataframe, aes(x = colonna2, y = y)) + geom_point() + geom_line(aes(y = prob))` |
+| i log-odds per nuovi valori | `modello.predict({"colonna2": [10, 20]}, which="linear")` | `predict(modello, newdata = data.frame(colonna2 = c(10, 20)), type = "link")` |
+| gli odds per nuovi valori | `math.e ** modello.predict({"colonna2": [10, 20]}, which="linear")` | `exp(predict(modello, newdata = data.frame(colonna2 = c(10, 20)), type = "link"))` |
+| l'odds ratio (x che sale di 1) | `math.e ** modello.params` | `exp(coefficients(modello))` |
+| l'odds ratio per x che sale di Δx (qui 100) | `math.e ** (100 * modello.params["colonna2"])` | `exp(100 * coefficients(modello)["colonna2"])` |
+
+> **Come si legge.** **Il summary.** I coefficienti (`coef`) sono **log-odds**: si legge solo il **segno**. Positivo: se la x sale, è più probabile il sì; negativo: è meno probabile. Il p-value è nella colonna `P>|z|` (si legge come `P>|t|`: sotto 0,05 la x è significativa); al posto dell'R² c'è `Pseudo R-squ.`, da 0 a 1.
+>
+> **Un caso preciso: e elevato alla retta.** I log-odds di un caso sono la retta, β₀ + β₁x (`which="linear"`); e^(β₀ + β₁x) sono i suoi **odds**; odds/(1 + odds) è la sua **probabilità** (`predict` da solo fa tutti e tre i passi). All'indietro: dalla probabilità p agli odds con p/(1 − p), dagli odds ai log-odds con il logaritmo. e^β₀ sono gli odds con x = 0: hanno senso solo se x = 0 esiste.
+>
+> **L'odds ratio: e elevato solo al coefficiente.** e^(β₁·Δx) è la **variazione percentuale degli odds** del sì quando la x sale di Δx: gli odds si **moltiplicano** per quel numero (non si somma, come nella lineare). Per la percentuale: (odds ratio − 1) × 100. Per esempio 1,0055 vuol dire +0,55% per ogni unità di x; 1,73 vuol dire +73%. Sopra 1 gli odds salgono, sotto 1 scendono (0,52: circa la metà).
+>
+> **Con una x di testo** (le dummy, come nella lineare): l'intercetta è la categoria di riferimento; il segno di `gruppo[T.B]` dice se, **a parità delle altre x**, per `B` il sì è più o meno probabile.
+
+> **Attenzione.** L'odds ratio cambia gli **odds**, non la probabilità: odds ratio 1,73 vuol dire odds +73%, non probabilità +73%. Se la colonna di prima non c'è più (Colab riavviato), `prob` va ricreata prima dei grafici e della matrice di confusione.
+
+## Scegliere il modello: AIC e R² aggiustato
+
+| cosa vuoi fare | Python | in R |
+|---|---|---|
+| il summary con anche l'AIC (logistica) | `modello.summary2()` | `summary(modello)` (l'AIC c'è già) |
+| solo l'AIC | `modello.aic` | `AIC(modello)` |
+| l'AIC di più modelli, insieme | `modello1.aic, modello2.aic` | `AIC(modello1, modello2)` |
+| solo l'R² aggiustato (lineare) | `modello.rsquared_adj` | `summary(modello)$adj.r.squared` |
+
+> **Come si legge.** Con una x in più R² e Pseudo R² **non scendono mai**: per scegliere serve una misura che penalizza le x in più. Nella logistica si sceglie il modello con l'**AIC più basso**; nella lineare quello con l'**R² aggiustato più alto** (`Adj. R-squared` nel summary). Si confrontano solo modelli stimati sugli stessi dati.
+
+## Quanto indovina il modello
+
+La **soglia** trasforma la probabilità in una previsione 0/1: `dataframe["prob"] > 0.5` vale vero (previsto 1) sopra 0,5, falso (previsto 0) sotto.
+
+| cosa vuoi fare | Python | in R |
+|---|---|---|
+| caricare i comandi | `from sklearn.metrics import confusion_matrix, classification_report` | — (`table` c'è già; `confusionMatrix` è nel pacchetto `caret`) |
+| la matrice di confusione | `confusion_matrix(dataframe["y"], dataframe["prob"] > 0.5)` | `table(dataframe$y, dataframe$prob > 0.5)` |
+| con un'altra soglia | `confusion_matrix(dataframe["y"], dataframe["prob"] > 0.2)` | `table(dataframe$y, dataframe$prob > 0.2)` |
+| accuratezza, sensitività, specificità | `print(classification_report(dataframe["y"], dataframe["prob"] > 0.5, target_names=["no (0)", "sì (1)"], digits=3))` | `caret::confusionMatrix(factor(as.integer(dataframe$prob > 0.5)), factor(dataframe$y), positive = "1")` |
+
+> **Come si legge.** In `confusion_matrix` le **righe** sono il reale (0, 1) e le **colonne** il previsto (0, 1): in alto a sinistra i veri negativi, in alto a destra i falsi positivi, in basso a sinistra i falsi negativi, in basso a destra i veri positivi. Nel report: `accuracy` è l'**accuratezza**; il `recall` della riga 1 è la **sensitività**, quello della riga 0 la **specificità**. `target_names` dà i nomi alle righe 0 e 1, `digits=3` i decimali; `print` lo mostra in colonna.
+
+> **Attenzione.** Si scrive **prima il reale, poi il previsto**: invertendoli si scambiano righe e colonne. Quando il sì è raro l'accuratezza è alta comunque: guardare anche la sensitività.

@@ -1,5 +1,6 @@
 ---
 number: 3
+etichetta: "(Salvini)"
 title: Rischio, rendimento e frontiera efficiente
 idea: "Dai prezzi ai rendimenti, rendimento atteso e rischio, la correlazione, il portafoglio di due titoli e il ribilanciamento, fino alla frontiera efficiente con nove titoli del FTSE MIB e all'indice di Sharpe."
 slides_pdf: slide/esercitazione_3.pdf

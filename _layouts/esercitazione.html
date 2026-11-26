@@ -10,7 +10,7 @@ layout: default
       <span class="tag tag--sezione tag--pe">Esercitazione</span>
       <span class="tag tag--lang">Python</span>
     </div>
-    <h1 class="modulo__title"><span class="modulo__num">E{{ page.number }}</span> {{ page.title }}</h1>
+    <h1 class="modulo__title"><span class="modulo__num">E{{ page.number }}{% if page.etichetta %} {{ page.etichetta }}{% endif %}</span> {{ page.title }}</h1>
     <p class="modulo__idea">{{ page.idea }}</p>
 
     <div class="slide-dl">
@@ -74,8 +74,8 @@ layout: default
   <div class="modulo__nav">
     {% for e in eserc %}
       {% assign pn = page.number | minus: 1 %}{% assign nn = page.number | plus: 1 %}
-      {% if e.number == pn %}<a class="btn btn-outline" href="{{ site.baseurl }}{{ e.url }}">← E{{ e.number }} · {{ e.title }}</a>{% endif %}
-      {% if e.number == nn %}<a class="btn btn-outline modulo__next" href="{{ site.baseurl }}{{ e.url }}">E{{ e.number }} · {{ e.title }} →</a>{% endif %}
+      {% if e.number == pn %}<a class="btn btn-outline" href="{{ site.baseurl }}{{ e.url }}">← E{{ e.number }}{% if e.etichetta %} {{ e.etichetta }}{% endif %} · {{ e.title }}</a>{% endif %}
+      {% if e.number == nn %}<a class="btn btn-outline modulo__next" href="{{ site.baseurl }}{{ e.url }}">E{{ e.number }}{% if e.etichetta %} {{ e.etichetta }}{% endif %} · {{ e.title }} →</a>{% endif %}
     {% endfor %}
     <a class="btn btn-outline modulo__next" href="{{ site.baseurl }}/corso/">Tutto il corso →</a>
   </div>
